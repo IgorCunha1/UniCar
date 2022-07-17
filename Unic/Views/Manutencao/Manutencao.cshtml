@@ -1,0 +1,81 @@
+﻿
+<div ng-app="Unic" ng-controller="ManutencaoController">
+
+
+
+
+    <div class="row">
+        <div class="pesquisa input-group mb-3 col-sm-4">
+
+            <input id="Placa" type="text" class="form-control form-input" aria-label="Small" placeholder="Pesquisar Por Placa">
+            <div class="input-group-prepend">
+                <button class="btn fa fa-search" ng-click="SelecionarCarroPorPlaca()"></button>
+            </div>
+
+        </div>
+    </div>
+
+    <form class="form">
+        <div class="form-group">
+            <div class="form-row">
+                <div class="col-sm-6">
+                    <input class="form-control" ng-model="Marca" readonly />
+                </div>
+                <div class="col-sm-6">
+                    <input class="form-control" ng-model="Modelo" readonly />
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-row">
+                <div class="col-sm-3">
+                    <input class="form-control" ng-model="Ano" readonly />
+                </div>
+                <div class="col-sm-3">
+                    <input class="form-control" ng-model="KM" readonly />
+                </div>
+                <div class="col-sm-6">
+                    <input class="form-control" ng-model="Descricao" readonly />
+                </div>
+            </div>
+        </div>
+    </form>
+    <hr />
+
+    <div class="btn-group-lg">
+        <button style="border-radius:30px" type="submit" class="btn btn-success btn-sm" data-toggle="modal" data-target="#adicionarCarro" ng-click="exibirSalvar()">
+            <i class="fa fa-plus-circle"></i>  Adicionar
+        </button>
+        <hr />
+    </div>
+    <div class="row">
+        <div class="pesquisa input-group mb-3 col-sm-6">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+            </div>
+            <input id="pesquisa" type="text" class="form-control form-input" aria-label="Small" placeholder="Pesquisar" ng-model="pesquisa">
+        </div>
+    </div>
+    <table id="tabelaCusto" style="text-align:center" class="table align-middle mb-0 bg-white">
+        <thead class="bg-light">
+            <tr>
+                <th>Origem</th>
+                <th>Descricao</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+@section scripts
+{
+    <script src="~/js/ManutencaoController.js"></script>
+}
