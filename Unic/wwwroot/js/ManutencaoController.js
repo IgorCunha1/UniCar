@@ -5,11 +5,11 @@ app.factory('serviceManutencao', ['$http', function ($http) {
 
 
     service.ListarManutencao = function (carroId) {
-        return $http.get('Manutencao/ListarManutencao'+carroId);
+        return $http.get('Manutencao/ListarManutencao/'+carroId);
     }
 
     service.AdicionarManutencao = function (manutencao) {
-        return $http.post('Manutencao/AdicionarCarro', manutencao)
+        return $http.post('Manutencao/AdicionarManutencao', manutencao)
     }
 
     service.DeletarManutencao = function(id){
@@ -25,42 +25,60 @@ app.factory('serviceManutencao', ['$http', function ($http) {
 
 app.controller('ManutencaoController', ['$scope', 'serviceManutencao', function ($scope, serviceManutencao) {
     
-    $scope.Manutencao = {};
+    $scope.Manutencoes = {};
     $scope.Carro = {};
 
     function init() {
         
     }
+
+    $scope.AdicionarManutencao = function(){
+        $scope.Manutencao = {};
+        $scope.Manutencao.descricao = $scope.DescricaoManutencao;
+        $scope.Manutencao.origem = $scope.OrigemManutencao;
+        $scope.Manutencao.valor = $scope.ValorManutencao.replace(/[^a-z0-9]/gi, '');
+        $scope.Manutencao.carroId = $scope.CarroId;
+        console.log($scope.Manutencao);
+        serviceManutencao.AdicionarManutencao($scope.Manutencao).then(function (response){
+            $scope.LimparCampo();
+            $scope.ListarManutencao($scope.Manutencao.carroId);
+            $scope.SelecionarCarroPorPlaca();
+        })
+    }
     
     $scope.ListarManutencao = function (carroId) {
-        serviceManutencao.ListarCarros(carroId).then(function (response) {
-            $scope.Manutencao = response.data;
-            console.log($scope.Manutencao);
+        serviceManutencao.ListarManutencao(carroId).then(function (response) {
+            $scope.Manutencoes = response.data;
+            
+            $scope.ValorTotalManutencao = $scope.Carro.valorTotalManutencao;
         });
     }
 
         
     $scope.SelecionarCarroPorPlaca = function(){
-        let placa = $('#Placa').val();
+        let placa = $('#Placa').val().replace(/[^a-z0-9]/gi, '');
          serviceManutencao.SelecionarCarroPorPlaca(placa).then(function (response){
              $scope.Carro = response.data;
+             console.log($scope.Carro);
              $scope.Marca = $scope.Carro.marca;
              $scope.Modelo = $scope.Carro.modelo;
              $scope.Ano = $scope.Carro.anoModelo;
              $scope.KM =$scope.Carro.km;
              $scope.Descricao = $scope.Carro.descricao;
              $scope.PrecoCompra = $scope.Carro.precoCompra;
-             console.log($scope.Carro);
-          })
+             $scope.CarroId = $scope.Carro.id;
+             $scope.Manutencoes = $scope.Carro.manutencoes;
+             $scope.ValorTotalManutencao = $scope.Carro.valorTotalManutencao;
+     })
     }
 
     $scope.DeletarManutencao = function (id) {
-
+        
         Swal.fire({
-            title: 'Você gostaria de deletar esse carro?',
+            title: 'Você gostaria de deletar essa manutenção?',
             text: "Após a deleção não será possivel desfazer essa ação!",
             icon: 'warning',
-            confirmButtonText: 'Sim, Deletar este carro',
+            confirmButtonText: 'Sim, Deletar esta Manutenção',
             cancelButtonText: 'Cancelar',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -72,11 +90,12 @@ app.controller('ManutencaoController', ['$scope', 'serviceManutencao', function 
                     Swal.fire({
                         position: 'center',
                         icon: 'warning',
-                        title: 'Carro Deletado Com Sucesso',
+                        title: 'Manutenção Deletada Com Sucesso',
                         showConfirmButton: false,
                         timer: 15000
                     })
-                    $scope.ListarCarros();
+                    $scope.ListarManutencao($scope.Carro.id);
+                    $scope.SelecionarCarroPorPlaca();
                 })
             }
         })
@@ -95,20 +114,9 @@ app.controller('ManutencaoController', ['$scope', 'serviceManutencao', function 
     }
 
     $scope.LimparCampo = function(){
-        $scope.Marca = '';
-        $scope.Modelo = '';
-        $scope.AnoFabricacao = '';
-
-        $scope.AnoModelo = '';
-        $scope.KM = '';
-        $scope.Descricao = '';
-        $scope.PrecoVenda = '';
-        $scope.PrecoCompra = '';
-        $scope.PessoaCompradora = '';
-        $scope.PessoaVendedora = '';
-        $scope.Status = '';
-        
-
+       $scope.DescricaoManutencao = '';
+       $scope.OrigemManutencao = '';
+       $scope.ValorManutencao = '';
     }
     
     $scope.orderByMe = function(x) {

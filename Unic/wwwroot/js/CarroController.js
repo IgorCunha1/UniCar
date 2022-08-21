@@ -41,6 +41,9 @@ app.factory('serviceCarro', ['$http', function ($http) {
     service.CarregarModelos = function(id){
         return $http.get(`https://parallelum.com.br/fipe/api/v1/carros/marcas/`+id+`/modelos`);
     }
+    service.CarregarAnos = function (codMarca, codModelo) {
+        return $http.get(`https://parallelum.com.br/fipe/api/v1/carros/marcas/` + codMarca+`/modelos/` + codModelo + `/anos`);
+    }
     service.verificarPlaca = function(placa){
         return $http.post('https://sinesp.contrateumdev.com.br/api', placa)
     }
@@ -49,16 +52,9 @@ app.factory('serviceCarro', ['$http', function ($http) {
 }]);
 
 
-app.controller('CarroController', ['$scope', 'serviceCarro', function ($scope, serviceCarro) {
+app.controller('CarroController', ['$scope', 'serviceCarro', '$http', function ($scope, serviceCarro, $http) {
     
-    $scope.Carros = {
-        custos: {}
-    };
-    
-    $scope.viewby = 3;
-    $scope.currentPage = 1;
-    $scope.itemsPerPage = $scope.viewby;
-    $scope.maxSize = 5; 
+    $scope.Carros = {};
     
     function init() {
         $scope.Carros = $scope.ListarCarros();
@@ -68,23 +64,7 @@ app.controller('CarroController', ['$scope', 'serviceCarro', function ($scope, s
         console.log($scope.Carros);
         serviceCarro.ListarCarros().then(function (response) {
             $scope.Carros = response.data;
-            $scope.totalItems = $scope.Carros.length;
-            
-            //Number of pager buttons to show
- 
-             $scope.setPage = function (pageNo) {
-                 $scope.currentPage = pageNo;
-             };
- 
-             $scope.pageChanged = function() {
-                 console.log('Page changed to: ' + $scope.currentPage);
-             };
- 
-             $scope.setItemsPerPage = function(num = 3) {
-                $scope.itemsPerPage = num;
-                $scope.currentPage = 1; //reset to first paghe
-             }
-            
+            $scope.totalItems = $scope.Carros.length;           
        });
     }
 
@@ -111,19 +91,20 @@ app.controller('CarroController', ['$scope', 'serviceCarro', function ($scope, s
         });
     }
 
-      var select = document.querySelector('#Marca');
-      var carro = {};
+    var select = document.querySelector('#Marca');
+    var carro = {};
+    $scope.Anos = {}
             
       select.addEventListener('change', function(){
         carro = JSON.parse(select.value);
            serviceCarro.CarregarModelos(carro.codigo).then(function(response){
                $scope.modelos = response.data.modelos;
-             
+               /*$scope.Anos = response.data.anos;*/
+               
            })
       });
-    $scope.quantidade = 10;
 
-    
+    $scope.quantidade = 10;
 
     $scope.DeletarCarro = function (id) {
 
@@ -170,17 +151,18 @@ app.controller('CarroController', ['$scope', 'serviceCarro', function ($scope, s
 
     $scope.SelecionarCarro = function(id){
         $scope.exibirEditar();
-
+        console.log(id)        
         serviceCarro.SelecionarCarro(id).then(function (response){
+            $('#movimentarCarro').modal('show');
             $scope.CarroId = response.data.id;
-            console.log(response);
+            // console.log(response);
             $scope.exMarca = response.data.marca;
             $scope.exModelo = response.data.modelo;
             $scope.exAnoFabricacao = response.data.anoFabricacao;
             $scope.exAnoModelo = response.data.anoModelo;
-            $scope.exKM = response.data.kM;
+            $scope.exKM = response.data.km;
             $scope.exDescricao = response.data.descricao;
-            $scope.exPrecoVenda = response.precoVenda;
+            $scope.exPrecoVenda = response.data.precoVenda;
             $scope.exPrecoCompra = response.data.precoCompra;
             $scope.exPessoaCompradora = response.data.pessoaCompradora;
             $scope.exPessoaVendedora = response.data.pessoaVendedora;
@@ -194,52 +176,59 @@ app.controller('CarroController', ['$scope', 'serviceCarro', function ($scope, s
         $scope.Carro = {};
          var precoVenda = $scope.PrecoVenda.replace(/[^a-z0-9]/gi, '');
          var precoCompra = $scope.PrecoCompra.replace(/[^a-z0-9]/gi, '');
+         var placa = $scope.Placa.replace(/[^a-z0-9]/gi, '');
 
-         $scope.Carro.marca = carro.nome;
-         $scope.Carro.modelo = $scope.Modelo;
-         $scope.Carro.anoFabricacao = $scope.AnoFabricacao;
-         $scope.Carro.anoModelo = $scope.AnoModelo;
-         $scope.Carro.km = $scope.KM;
-         $scope.Carro.descricao = $scope.Descricao;
-         $scope.Carro.precoVenda = precoVenda;
-         $scope.Carro.precoCompra = precoCompra;
-         $scope.Carro.pessoaCompradora = $scope.PessoaCompradora;
-         $scope.Carro.pessoaVendedora = $scope.PessoaVendedora;
-         $scope.Carro.status = $scope.Status;
-         $scope.Carro.placa = $scope.Placa;
-        
+         $scope.Carro.Marca = carro.nome;
+         $scope.Carro.Modelo = $scope.Modelo;
+         $scope.Carro.AnoModelo = $scope.AnoModelo;
+         $scope.Carro.KM = $scope.KM;
+         $scope.Carro.Descricao = $scope.Descricao;
+         $scope.Carro.PrecoCompra = precoCompra;
+         $scope.Carro.PessoaVendedora = $scope.PessoaVendedora;
+         $scope.Carro.Status = "1";
+         $scope.Carro.Placa = placa;
          
+        $http({
+            method: "POST",
+            url: "https://localhost:44305/Carro/AdicionarCarro",
+            data: $scope.Carro
+        }).then(function successCallback(response) {
 
-             serviceCarro.AdicionarCarro($scope.Carro).then(function (response){
-                 console.log(response)
-                 Swal.fire({
-                     position: 'center',
-                     icon: 'success',
-                     title: 'Carro Salva Com Sucesso',
-                     showConfirmButton: false,
-                     timer: 15000
-                   })
-                 $scope.ListarCarros();
-                //  $scope.LimparCampo();
-
-             })
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Carro Salva Com Sucesso',
+                        showConfirmButton: false,
+                        timer: 15000
+                      })
+                     $scope.ListarCarros();
+                     $scope.LimparCampo();
+          }, function errorCallback(response) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: response.data,
+                        showConfirmButton: false,
+                        timer: 15000
+                      })
+                     $scope.ListarCarros();
+          });
     }
 
     $scope.EditarCarro = function(){
         $scope.Carro = {};
         
         $scope.Carro.id = $scope.CarroId
-        $scope.Carro.Marca = $scope.Marca;
-        $scope.Carro.Modelo = $scope.Modelo;
-        $scope.Carro.AnoFabricacao = $scope.AnoFabricacao;
-        $scope.Carro.AnoModelo = $scope.AnoModelo;
-        $scope.Carro.KM = $scope.KM;
-        $scope.Carro.Descricao = $scope.Descricao;
-        $scope.Carro.PrecoVenda = $scope.PrecoVenda;
-        $scope.Carro.PrecoCompra = $scope.PrecoCompra;
-        $scope.Carro.PessoaCompradora = $scope.PessoaCompradora;
-        $scope.Carro.PessoaVendedora = $scope.PessoaVendedora;
-        $scope.Carro.Status = $scope.Status;
+        $scope.Carro.Marca = $scope.exMarca;
+        $scope.Carro.Modelo = $scope.exModelo;
+        $scope.Carro.Placa = $scope.exPlaca;
+        $scope.Carro.KM = $scope.exKM;
+        $scope.Carro.AnoFabricacao = $scope.exAnoFabricacao;
+        $scope.Carro.AnoModelo = $scope.exAnoModelo;
+        $scope.Carro.Descricao = $scope.exDescricao;
+        $scope.Carro.PrecoVenda = $scope.exPrecoVenda;
+        $scope.Carro.PessoaCompradora = $scope.exPessoaCompradora;
+        $scope.Carro.Status = $scope.exStatus;
 
             serviceCarro.EditarCarro($scope.Carro.id, $scope.Carro).then(function(response){
                 console.log(response);
@@ -269,7 +258,4 @@ app.controller('CarroController', ['$scope', 'serviceCarro', function ($scope, s
       }
 
       init();
-
-      
-      
 }]);

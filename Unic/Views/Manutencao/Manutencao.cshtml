@@ -1,9 +1,6 @@
 ﻿
 <div ng-app="Unic" ng-controller="ManutencaoController">
 
-
-
-
     <div class="row">
         <div class="pesquisa input-group mb-3 col-sm-4">
 
@@ -43,7 +40,7 @@
     <hr />
 
     <div class="btn-group-lg">
-        <button style="border-radius:30px" type="submit" class="btn btn-success btn-sm" data-toggle="modal" data-target="#adicionarCarro" ng-click="exibirSalvar()">
+        <button style="border-radius:30px" type="submit" class="btn btn-success btn-sm" data-toggle="modal" data-target="#adicionarManutencao">
             <i class="fa fa-plus-circle"></i>  Adicionar
         </button>
         <hr />
@@ -62,20 +59,71 @@
                 <th>Origem</th>
                 <th>Descricao</th>
                 <th>Valor</th>
+                <th>Deletar</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
+            <tr ng-repeat="ma in Manutencoes">
+                <td>{{ma.origem}}</td>
+                <td>{{ma.descricao}}</td>
+                <td class="money">{{ma.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });}}</td>
+                <td>
+                    <a ng-click="DeletarManutencao(ma.id)"><i class="fa fa-trash fa-lg"></i></a>
+                </td>
             </tr>
         </tbody>
+        <tfoot>
+            <hr />
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td id="valorTotal">Total: {{ValorTotalManutencao}}</td>
+                    <td></td>
+                </tr>
+        </tfoot>
     </table>
 
+    <div class="modal fade" id="adicionarManutencao" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Adicionar Manutencao</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+
+                    <form>
+                        <div class="form-row">
+                            <input ng-model="CarroId" hidden />
+                            <div class="form-group col-sm-12">
+                                <label for="Descricao">Descricao</label>
+                                <input class="form-control" type="text" id="Descricao" ng-model="DescricaoManutencao" />
+                            </div>
+                        </div>
+                        <hr size="50">
+                        <div class="form-row">
+                            <div class="form-group col-sm-6">
+                                <label for="Origem">Origem</label>
+                                <input id="Origem" type="text" class="form-control" ng-model="OrigemManutencao" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="Modelo">Valor Manutenção</label>
+                                <input class="form-control money" type="text" id="exModelo" ng-model="ValorManutencao" />
+                            </div>
+                        </div>
+                    </form>
+                    <hr />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="botaoSalvar" class="btn btn-success" ng-click="AdicionarManutencao()" style="display:block">Salvar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="LimparCampo()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-@section scripts
+            @section scripts
 {
-    <script src="~/js/ManutencaoController.js"></script>
-}
+                <script src="~/js/ManutencaoController.js"></script>
+            }

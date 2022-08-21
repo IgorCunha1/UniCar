@@ -85,27 +85,33 @@ namespace Unic.Controllers
         [Route("Manutencao/ListarManutencao/{carroId}")]
         public IActionResult ListarManutencao(int carroId)
         {
-            var Manutencaos = _ManutencaoRepository.ListarManutencoes(carroId);
-            List<ListarManutencoesDto> ManutencaoDto = new();
-            foreach (var p in Manutencaos)
-            {
-                ManutencaoDto.Add(_mapper.Map<ListarManutencoesDto>(p));
-            }
+            try 
+            { 
+                var Manutencaos = _ManutencaoRepository.ListarManutencoes(carroId);
+                List<ListarManutencoesDto> ManutencaoDto = new();
+                foreach (var p in Manutencaos)
+                {
+                    ManutencaoDto.Add(_mapper.Map<ListarManutencoesDto>(p));
+                }
             
-            return Json(Manutencaos);
+                return Json(Manutencaos);
+            }
+            catch(Exception e)
+            {
+                return Json(e.Message);
+            }
         }
         
         [HttpPost]
         [Route("Manutencao/Deletar/{id}")]
-        public IActionResult Deletar(int id)
+        public async Task<IActionResult> Deletar(int id)
         {
             try { 
 
                 Manutencao Manutencao = _context.Manutencao.FirstOrDefault(p => p.Id == id);
                 if(Manutencao != null)
                 {
-                    _context.Manutencao.Remove(Manutencao);
-                    _context.SaveChanges();
+                    await _ManutencaoRepository.DeletarManutencao(Manutencao.Id);
                     return Ok();
                 }
                 else

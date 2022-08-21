@@ -10,8 +10,8 @@ using Unic.Data;
 namespace Unic.Migrations
 {
     [DbContext(typeof(UnicContext))]
-    [Migration("20220708022136_Carro")]
-    partial class Carro
+    [Migration("20220821035014_adcMarca")]
+    partial class adcMarca
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,9 +27,6 @@ namespace Unic.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AnoFabricacao")
-                        .HasColumnType("int");
 
                     b.Property<int>("AnoModelo")
                         .HasColumnType("int");
@@ -59,10 +56,12 @@ namespace Unic.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PessoaCompradora")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PessoaVendedora")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Placa")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -74,6 +73,9 @@ namespace Unic.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("ValorTotalManutencao")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -115,6 +117,48 @@ namespace Unic.Migrations
                     b.ToTable("Endereco");
                 });
 
+            modelBuilder.Entity("Unic.Models.Manutencao", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CarroId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Descricao")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Origem")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Valor")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarroId");
+
+                    b.ToTable("Manutencao");
+                });
+
+            modelBuilder.Entity("Unic.Models.Marca", b =>
+                {
+                    b.Property<int>("codigo")
+                        .HasColumnType("int");
+
+                    b.Property<string>("nome")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("codigo");
+
+                    b.ToTable("Marca");
+                });
+
             modelBuilder.Entity("Unic.Models.Pessoa", b =>
                 {
                     b.Property<int>("Id")
@@ -147,6 +191,17 @@ namespace Unic.Migrations
                     b.ToTable("Pessoa");
                 });
 
+            modelBuilder.Entity("Unic.Models.Manutencao", b =>
+                {
+                    b.HasOne("Unic.Models.Carro", "Carro")
+                        .WithMany("Manutencoes")
+                        .HasForeignKey("CarroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Carro");
+                });
+
             modelBuilder.Entity("Unic.Models.Pessoa", b =>
                 {
                     b.HasOne("Unic.Models.Endereco", "Endereco")
@@ -156,6 +211,11 @@ namespace Unic.Migrations
                         .IsRequired();
 
                     b.Navigation("Endereco");
+                });
+
+            modelBuilder.Entity("Unic.Models.Carro", b =>
+                {
+                    b.Navigation("Manutencoes");
                 });
 
             modelBuilder.Entity("Unic.Models.Endereco", b =>

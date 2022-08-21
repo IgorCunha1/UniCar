@@ -20,15 +20,27 @@ namespace Unic.Repositories
 
         public async Task AdicionarManutencao(Manutencao manutencao)
         {
+            var carro = await _context.Carro.FindAsync(manutencao.CarroId);
+            carro.ValorTotalManutencao += manutencao.Valor;
+
             await _context.Manutencao.AddAsync(manutencao);
             await _context.SaveChangesAsync();
         }
 
         public async Task DeletarManutencao(int id)
         {
-            var manutencao = await RecuperarManutencao(id);
-             _context.Manutencao.Remove(manutencao);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var manutencao = await RecuperarManutencao(id);
+                var carro = await _context.Carro.FindAsync(manutencao.CarroId);
+                carro.ValorTotalManutencao -= manutencao.Valor;
+
+                   _context.Manutencao.Remove(manutencao);
+                await _context.SaveChangesAsync();
+            }catch(Exception e)
+            {
+                throw new Exception(message: "Erro ao concluir a operação");
+            }
         }
 
         public Task EditarManutencao(int id, Manutencao manutencao)

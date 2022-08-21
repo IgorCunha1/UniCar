@@ -1,15 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Unic.Models;
 using static Unic.Enum.Enums;
+using Unic.Data.Dtos.Manutencao;
+using Unic.Repositories.Interfaces;
+using System.Linq;
+using AutoMapper;
+using Unic.Models;
 
 namespace Unic.Data.Dtos.Carro
 {
     public class RecuperarCarroDto
     {
+
+        public RecuperarCarroDto()
+        {
+
+        }
+
         [Required]
         public int Id { get; set; }
 
@@ -48,5 +55,9 @@ namespace Unic.Data.Dtos.Carro
 
         [Required]
         public string Placa { get; set; }
+
+        public decimal ValorTotalManutencao { get; set; }
+
+        public virtual List<Unic.Models.Manutencao> Manutencoes { get; set; }
     }
 }

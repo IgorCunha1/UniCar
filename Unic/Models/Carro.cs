@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper.Configuration.Annotations;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -26,9 +27,6 @@ namespace Unic.Models
 
         [Required]
         public string Modelo { get; set; }
-        
-        [Required]
-        public int AnoFabricacao { get; set; }
 
         [Required]
         public int AnoModelo { get; set; }
@@ -42,16 +40,16 @@ namespace Unic.Models
         [Required]
         public string Descricao { get; set; }
 
-        [Required]
+        
         public decimal PrecoVenda { get; set; }
 
-        [Required]
+        
         public decimal PrecoCompra { get; set; }
 
-        [Required]
+        
         public string PessoaCompradora { get; set; }
 
-        [Required]
+        
         public string PessoaVendedora { get; set; }
 
         [Required]
@@ -67,6 +65,9 @@ namespace Unic.Models
         public DateTime DataVenda { get; set; }
 
         public virtual List<Manutencao> Manutencoes { get; set; }
+
+        
+        public decimal ValorTotalManutencao { get; set; }
 
     }
 }

@@ -26,9 +26,6 @@ namespace Unic.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AnoFabricacao")
-                        .HasColumnType("int");
-
                     b.Property<int>("AnoModelo")
                         .HasColumnType("int");
 
@@ -57,11 +54,9 @@ namespace Unic.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PessoaCompradora")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PessoaVendedora")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Placa")
@@ -76,6 +71,9 @@ namespace Unic.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("ValorTotalManutencao")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -144,6 +142,19 @@ namespace Unic.Migrations
                     b.HasIndex("CarroId");
 
                     b.ToTable("Manutencao");
+                });
+
+            modelBuilder.Entity("Unic.Models.Marca", b =>
+                {
+                    b.Property<int>("codigo")
+                        .HasColumnType("int");
+
+                    b.Property<string>("nome")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("codigo");
+
+                    b.ToTable("Marca");
                 });
 
             modelBuilder.Entity("Unic.Models.Pessoa", b =>

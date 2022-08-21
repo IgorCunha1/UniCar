@@ -13,6 +13,9 @@ namespace Unic.Repositories.Interfaces
         Carro RecuperarCarro(int id);
         Carro RecuperarCarroPorPlaca(string id);
         Task AdicionarCarro(Carro carro);
-        
+        bool ValidarPlaca(string placa);
+
+        List<Marca> GetApiMarcas();
+        List<Modelo> GetApiModelos();
     }
 }

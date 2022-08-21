@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Unic.Models
@@ -19,6 +20,7 @@ namespace Unic.Models
 
         public int CarroId { get; set; }
 
+        [JsonIgnore]
         public virtual Carro Carro { get; set; }
     }
 }

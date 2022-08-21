@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Unic.Migrations
 {
-    public partial class Carro : Migration
+    public partial class adcMarca : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,18 +15,19 @@ namespace Unic.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Marca = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Modelo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AnoFabricacao = table.Column<int>(type: "int", nullable: false),
                     AnoModelo = table.Column<int>(type: "int", nullable: false),
                     KM = table.Column<int>(type: "int", nullable: false),
+                    Placa = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PrecoVenda = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     PrecoCompra = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    PessoaCompradora = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PessoaVendedora = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PessoaCompradora = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PessoaVendedora = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DataCompra = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DataVenda = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataCompra = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataVenda = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ValorTotalManutencao = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -49,6 +50,41 @@ namespace Unic.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Endereco", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Marca",
+                columns: table => new
+                {
+                    codigo = table.Column<int>(type: "int", nullable: false),
+                    nome = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Marca", x => x.codigo);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Manutencao",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Origem = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Valor = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CarroId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Manutencao", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Manutencao_Carro_CarroId",
+                        column: x => x.CarroId,
+                        principalTable: "Carro",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -75,6 +111,11 @@ namespace Unic.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Manutencao_CarroId",
+                table: "Manutencao",
+                column: "CarroId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Pessoa_EnderecoId",
                 table: "Pessoa",
                 column: "EnderecoId",
@@ -84,10 +125,16 @@ namespace Unic.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Carro");
+                name: "Manutencao");
+
+            migrationBuilder.DropTable(
+                name: "Marca");
 
             migrationBuilder.DropTable(
                 name: "Pessoa");
+
+            migrationBuilder.DropTable(
+                name: "Carro");
 
             migrationBuilder.DropTable(
                 name: "Endereco");

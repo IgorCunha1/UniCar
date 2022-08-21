@@ -15,8 +15,8 @@ namespace Unic.Data.Dtos.Carro
         [Required]
         public string Modelo { get; set; }
 
-        [Required]
-        public int AnoFabricacao { get; set; }
+        //[Required]
+        //public int AnoFabricacao { get; set; }
 
         [Required]
         public int AnoModelo { get; set; }
@@ -27,14 +27,11 @@ namespace Unic.Data.Dtos.Carro
         [Required]
         public string Descricao { get; set; }
 
-        [Required]
-        public decimal PrecoVenda { get; set; }
-
-        [Required]
-        public decimal PrecoCompra { get; set; }
-
-        [Required]
-        public string PessoaCompradora { get; set; }
+        //[Required]
+        //public decimal PrecoVenda { get; set; }
+                
+        //[Required]
+        //public string PessoaCompradora { get; set; }
 
         [Required]
         public string PessoaVendedora { get; set; }

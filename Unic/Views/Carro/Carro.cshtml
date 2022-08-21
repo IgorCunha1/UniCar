@@ -1,6 +1,5 @@
 ﻿
 <div ng-app="Unic" ng-controller="CarroController">
-
     <div class="btn-group-lg">
         <button style="border-radius:30px" type="submit" class="btn btn-success btn-sm" data-toggle="modal" data-target="#adicionarCarro" ng-click="exibirSalvar()">
             <i class="fa fa-plus-circle"></i>  Adicionar
@@ -15,6 +14,7 @@
             <input id="pesquisa" type="text" class="form-control form-input" aria-label="Small" placeholder="Pesquisar" ng-model="pesquisa">
         </div>
     </div>
+    @* TABELA DE CARROS-----------------------------*@
     <table id="tabelaCarros" style="text-align:center" class="table align-middle mb-0 bg-white">
         <thead class="bg-light">
             <tr>
@@ -24,10 +24,10 @@
                 <th ng-click="orderByMe('placa')">Placa</th>
                 <th ng-click="orderByMe('ano')" scope="col">Ano</th>
                 <th ng-click="orderByMe('km')" scope="col">KM</th>
-                <th ng-click="orderByMe('preco')" scope="col">Preço</th>
+                @*<th ng-click="orderByMe('preco')" scope="col">Preço</th>*@
                 <th ng-click="orderByMe('vendedor')" scope="col">Vendedor</th>
                 <th ng-click="orderByMe('status')" scope="col">Status</th>
-                <th scope="col">Editar</th>
+                <th scope="col">Vender</th>
                 <th scope="col">Deletar</th>
             </tr>
         </thead>
@@ -39,7 +39,7 @@
                 <td>{{ca.placa}}</td>
                 <td>{{ca.anoModelo}}</td>
                 <td>{{ca.km}}</td>
-                <td>{{ca.precoVenda.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });}}</td>
+                @*<td>{{ca.precoVenda.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });}}</td>*@
                 <td>{{ca.pessoaVendedora}}</td>
                 <td>
                     <span class="badge badge-success rounded-pill d-inline" ng-if="ca.status == 1">
@@ -53,7 +53,7 @@
                     </span>
                 </td>
                 <td>
-                    <a data-toggle="modal" data-target="#movimentarCarro" ng-click="SelecionarCarro(ca.id)"><i class="fa fa-pencil fa-lg"></i></a>
+                    <a data-toggle="modal" @*data-target="#movimentarCarro"*@ ng-click="SelecionarCarro(ca.id)"><i class="fa fa-money fa-lg"></i></a>
                 </td>
                 <td>
                     <a ng-click="DeletarCarro(ca.id)"><i class="fa fa-trash fa-lg"></i></a>
@@ -61,27 +61,23 @@
             </tr>
 
         </tbody>
-
     </table>
-    <pagination total-items="{{totalItems}}" ng-model="currentPage" max-size="{{maxSize}}" class="pagination-sm"
-                boundary-links="true" rotate="false" num-pages="numPages" items-per-page="{{itemsPerPage}}">
-    </pagination>
+    <hr />
+    <br />
+    <div class="row float-right">
+        <button class="btn btn-block col-1" style="color:black; background-color:aliceblue; text-align:center;" disabled>{{totalItems}} </button>
+    </div>
 
 
-
-
-
+    @* ADICIONAR CARROS----------------------------- *@
     <div class="modal fade" id="adicionarCarro" role="dialog" tabindex="-1">
         <div class="modal-dialog modal-lg">
-
             <div class="modal-content">
-
                 <div class="modal-header">
                     <h4 class="modal-title">Adicionar Carro</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-
                     <form>
                         <div class="form-row">
                             <input ng-model="CarroId" hidden />
@@ -105,13 +101,10 @@
                         <hr size="50">
                         <div class="form-row">
                             <div class="form-group col-sm-6">
-                                <label for="AnoFabricacao">Ano Fabricacao</label>
-                                <input id="AnoFabricacao" type="number" class="form-control" min="1990" max="2080" ng-model="AnoFabricacao" required="required" />
-                            </div>
-                            <div class="form-group col-sm-6">
                                 <label for="AnoModelo">Ano Modelo</label>
                                 <input id="AnoModelo" type="number" class="form-control" ng-model="AnoModelo" required="required" />
                             </div>
+
                             <div class="form-group col-sm-6">
                                 <label for="KM">KM</label>
                                 <input id="KM" type="number" class="form-control" ng-model="KM" required="required" />
@@ -121,16 +114,8 @@
                                 <input id="Descricao" type="text" class="form-control" ng-model="Descricao" required="required" />
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="PrecoVenda">Preco Venda</label>
-                                <input id="PrecoVenda" type="text" class="form-control money" ng-model="PrecoVenda" required="required" />
-                            </div>
-                            <div class="form-group col-sm-6">
                                 <label for="PrecoVenda">Preco Compra</label>
                                 <input id="PrecoCompra" type="text" class="form-control money" ng-model="PrecoCompra" required="required" />
-                            </div>
-                            <div class="form-group col-sm-6">
-                                <label for="PessoaCompradora">Pessoa Compradora</label>
-                                <input id="PessoaCompradora" type="text" class="form-control" ng-model="PessoaCompradora" required="required" />
                             </div>
                             <div class="form-group col-sm-6">
                                 <label for="PessoaVendedora">Pessoa Vendedora</label>
@@ -140,117 +125,23 @@
                                 <label for="Placa">Placa</label>
                                 <input id="Placa" type="text" class="form-control" ng-model="Placa" required="required" />
                             </div>
-                            <div class="form-group col-sm-6">
-                                <label for="Status">Status</label>
-                                <select id="Status" type="text" class="form-control" ng-model="Status" required="required">
-                                    <option value="1">Disponivel</option>
-                                    <option value="2">Vendido</option>
-                                    <option value="3">Negociacao</option>
-                                </select>
-                            </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" id="botaoSalvar" class="btn btn-success" ng-disabled="error || incomplete" ng-click="AdicionarCarro()" style="display:block">Salvar</button>
-                    <button type="button" id="botaoEditar" class="btn btn-success" ng-click="EditarCarro()" style="display:none">Editar</button>
+                    @*<button type="button" id="botaoEditar" class="btn btn-success" ng-click="EditarCarro()" style="display:none">Editar</button>*@
                     <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="LimparCampo()">Cancelar</button>
                 </div>
                 <hr />
-
             </div>
         </div>
     </div>
-    <div class="modal fade" id="movimentarCarro" role="dialog" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <h4 class="modal-title">Movimentar Carro</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-
-                    <form>
-                        <div class="form-row">
-                            <input ng-model="CarroId" hidden />
-                            <div class="form-group col-sm-6">
-                                <label for="Marca">Marca</label>
-                                <input class="form-control" id="exMarca" ng-model="exMarca" readonly />
-                            </div>
-                            <div class="form-group col-sm-6">
-                                <label for="Modelo">Modelo</label>
-                                <input class="form-control" id="exModelo" ng-model="exModelo" readonly />
-                            </div>
-                        </div>
-                        <hr size="50">
-                        <div class="form-row">
-                            <div class="form-group col-sm-6">
-                                <label for="Placa">Placa</label>
-                                <input id="Placa" type="text" class="form-control" ng-model="exPlaca" readonly />
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-sm-6">
-                                <label for="AnoFabricacao">Ano Fabricacao</label>
-                                <input id="AnoFabricacao" type="number" class="form-control" min="1990" max="2080" ng-model="exAnoFabricacao" readonly />
-                            </div>
-                            <div class="form-group col-sm-6">
-                                <label for="AnoModelo">Ano Modelo</label>
-                                <input id="AnoModelo" type="number" class="form-control" ng-model="exAnoModelo" readonly />
-                            </div>
-                            <div class="form-group col-sm-6">
-                                <label for="KM">KM</label>
-                                <input id="KM" type="number" class="form-control" ng-model="exKM" required="required" />
-                            </div>
-                            <div class="form-group col-sm-6">
-                                <label for="Descricao">Descricao</label>
-                                <input id="Descricao" type="text" class="form-control" ng-model="exDescricao" required="required" />
-                            </div>
-                            <div class="form-group col-sm-6">
-                                <label for="PrecoVenda">Preco Venda</label>
-                                <input id="PrecoVenda" type="text" class="form-control money" ng-model="exPrecoVenda" required="required" />
-                            </div>
-                            <div class="form-group col-sm-6">
-                                <label for="PessoaCompradora">Pessoa Compradora</label>
-                                <input id="PessoaCompradora" type="text" class="form-control" ng-model="exPessoaCompradora" required="required" />
-                            </div>
-
-                        </div>
-                        <div class="form-row">
-                            <div class="col-sm-6 align-baseline" style="text-align:left; font-size:20px;">
-
-                                <label id="status" class="badge badge-success rounded-pill d-inline" ng-if="exStatus == 1">
-                                    Disponivel 
-                                </label>
-                                <label id="status" class="badge badge-primary rounded-pill d-inline" ng-if="exStatus == 2">
-                                     Vendido 
-                                </label>
-                                <label id="status" class="badge badge-warning rounded-pill d-inline" ng-if="exStatus == 3">
-                                     Negociação
-                                </label>
-
-                            </div>
-                        </div>
-                    </form>
-                    <hr />
-                </div>
-                <div class="modal-footer">
-
-                    
-
-                    <button type="submit" id="botaoSalvar" class="btn btn-success" ng-disabled="error || incomplete" ng-click="AdicionarCarro()" style="display:block">Salvar</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="LimparCampo()">Cancelar</button>
-                </div>
-                <hr />
-
-            </div>
-        </div>
-    </div>
+@{await Html.RenderPartialAsync("_VenderCarro");}
 </div>
 
 @section scripts
 {
-     <script src="~/js/CarroController.js"></script>   
+    <script src="~/js/CarroController.js"></script>
 }
+

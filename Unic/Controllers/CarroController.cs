@@ -8,6 +8,9 @@ using Unic.Data;
 using AutoMapper;
 using Unic.Repositories.Interfaces;
 using Unic.Data.Dtos.Carro;
+using System.Net;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace Unic.Controllers
 {
@@ -17,6 +20,7 @@ namespace Unic.Controllers
         private UnicContext _context;
         private IMapper _mapper;
         private ICarroRepository _carroRepository;
+
 
         public CarroController(UnicContext unicContext, IMapper mapper, ICarroRepository carroRepository)
         {
@@ -32,19 +36,56 @@ namespace Unic.Controllers
             return View();
         }
 
-        [HttpPost]
-        [Route("Carro/AdicionarCarro")]
-        public async Task<IActionResult> AdicionarCarroAsync([FromBody] CreateCarroDto CarroDto)
+        public IActionResult att()
         {
-            if (!ModelState.IsValid)
+            var marcas = _carroRepository.GetApiMarcas();
+
+            var marcasDbo = _context.Marca.ToList();
+
+            if(marcas.Count > marcasDbo.Count)
             {
-                return NoContent();
+                foreach (var m in marcas)
+                {
+                    _context.Marca.Add(m);
+                    _context.SaveChanges();
+                }
             }
-           
-            Carro Carro = _mapper.Map<Carro>(CarroDto);
-            await _carroRepository.AdicionarCarro(Carro);
 
             return Ok();
+        }
+
+        [HttpPost]
+        [Route("Carro/AdicionarCarro")]
+        public async Task<IActionResult> AdicionarCarroAsync([FromBody]CreateCarroDto CarroDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return NoContent();
+                }
+                
+                if(CarroDto == null)
+                {
+                    return StatusCode(400, "Erro ao receber os Dados");
+                }
+
+                bool validarPlaca = _carroRepository.ValidarPlaca(CarroDto.Placa);
+
+                if (!validarPlaca)
+                {
+                    return BadRequest("A Placa digitada já consta na base atual");
+                }
+           
+                Carro Carro = _mapper.Map<Carro>(CarroDto);
+                await _carroRepository.AdicionarCarro(Carro);
+
+                return Ok();
+            }
+            catch(Exception e)
+            {
+                return Json(e.Message);
+            }
         }
 
         [HttpGet]
@@ -68,15 +109,14 @@ namespace Unic.Controllers
         {
             
             Carro carro = _context.Carro.FirstOrDefault(p => p.Id == id);
-            if(carro == null)
-            {
-                return NotFound();
-            }
 
             carro = _mapper.Map<Carro>(CarroEditado);
 
-            _context.SaveChanges();
-            
+            if (carro == null || !ModelState.IsValid)
+            {
+                return NotFound();
+            }
+            _context.SaveChanges();   
             return Ok(carro);
         }
 
@@ -89,7 +129,6 @@ namespace Unic.Controllers
             List<ListarCarroDto> CarroDto = new();
             foreach (var p in Carros)
             {
-
                 CarroDto.Add(_mapper.Map<ListarCarroDto>(p));
             }
             
@@ -125,15 +164,21 @@ namespace Unic.Controllers
         [Route("Carro/RecuperarCarroPorPlaca/{placa}")]
         public IActionResult RecuperarCarroPorPlaca(string placa)
         {
-
-            Carro carro = _carroRepository.RecuperarCarroPorPlaca(placa);
-            var carroDto = _mapper.Map<RecuperarCarroDto>(carro);
-            if (carro != null)
+            try
             {
-                return Ok(carroDto);
-            }
+                Carro carro = _carroRepository.RecuperarCarroPorPlaca(placa);
+                var carroDto = _mapper.Map<RecuperarCarroDto>(carro);
+                if (carro != null)
+                {
+                    return Ok(carroDto);
+                }
 
-            return NotFound();
+                return NotFound();
+            }
+            catch(Exception e)
+            {
+                return Json(e.Message);
+            }
         }
 
 
