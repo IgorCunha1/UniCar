@@ -39,7 +39,6 @@ namespace Unic.Controllers
         public IActionResult att()
         {
             var marcas = _carroRepository.GetApiMarcas();
-
             var marcasDbo = _context.Marca.ToList();
 
             if(marcas.Count > marcasDbo.Count)
@@ -50,7 +49,18 @@ namespace Unic.Controllers
                     _context.SaveChanges();
                 }
             }
+            
+            var modelos = _carroRepository.GetApiModelos();
+            var modelosDbo = _context.Modelo.ToList();
 
+            if (modelos.Count > modelosDbo.Count)
+            {
+                foreach (var mdl in modelos)
+                {
+                    _context.Modelo.Add(mdl);
+                    _context.SaveChanges();
+                }
+            }
             return Ok();
         }
 

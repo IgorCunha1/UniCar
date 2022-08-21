@@ -13,10 +13,11 @@ namespace Unic.Profiles
         public ManutencaoProfile()
         {
             CreateMap<CreateManutencaoDto, Manutencao>();
-            CreateMap<Manutencao, RecuperarManutencaoDto>();
-            CreateMap<RecuperarManutencaoDto, Manutencao>();
+            CreateMap<Manutencao, CreateManutencaoDto>();
             CreateMap<Manutencao, ListarManutencoesDto>();
             CreateMap<ListarManutencoesDto, Manutencao>();
+            
+            CreateMap<RecuperarManutencaoDto, Manutencao>();
         }
     }
 }

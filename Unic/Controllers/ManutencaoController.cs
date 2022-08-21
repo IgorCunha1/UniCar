@@ -8,6 +8,7 @@ using Unic.Data;
 using AutoMapper;
 using Unic.Repositories.Interfaces;
 using Unic.Data.Dtos.Manutencao;
+using Unic.Data.Dtos.ModeloDto;
 
 namespace Unic.Controllers
 {
@@ -53,7 +54,7 @@ namespace Unic.Controllers
         {
 
             Manutencao Manutencao = _context.Manutencao.FirstOrDefault(p => p.Id == id);
-            var ManutencaoDto = _mapper.Map<RecuperarManutencaoDto>(Manutencao);
+            var ManutencaoDto = _mapper.Map<APIModeloDto>(Manutencao);
             if (Manutencao != null)
             {
                 return Ok(ManutencaoDto);

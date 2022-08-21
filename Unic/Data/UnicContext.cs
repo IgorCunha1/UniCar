@@ -33,7 +33,7 @@ namespace Unic.Data
         public DbSet<Carro> Carro { get; set; }
         public DbSet<Manutencao> Manutencao { get; set; }
         public DbSet<Marca> Marca { get; set; }
-        public DbSet<Marca> Modelo { get; set; }
+        public DbSet<Modelo> Modelo { get; set; }
 
 
 

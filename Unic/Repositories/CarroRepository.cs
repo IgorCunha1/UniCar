@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Unic.Data;
 using Unic.Data.Dtos.Carro;
 using Unic.Data.Dtos.Manutencao;
+using Unic.Data.Dtos.ModeloDto;
 using Unic.Models;
 using Unic.Repositories.Interfaces;
 
@@ -98,10 +99,11 @@ namespace Unic.Repositories
         }
         public List<Modelo> GetApiModelos()
         {
-            var marcasDbo = _context.Marca;
+            var marcasDbo = _context.Marca.ToList();
 
             HttpWebRequest requisicaoWeb = null;
-            List<Modelo> modelos = null;
+            var modelos = new List<Modelo>();
+            
 
             foreach (var m in marcasDbo)
             {
@@ -112,11 +114,13 @@ namespace Unic.Repositories
                 var dados = resposta.GetResponseStream();
                 StreamReader reader = new StreamReader(dados);
                 object objResposta = reader.ReadToEnd();
-                modelos = JsonConvert.DeserializeObject<List<Modelo>>(objResposta.ToString());
+                var modelosDto = JsonConvert.DeserializeObject<ModeloAnoDto>(objResposta.ToString());
 
-                foreach(var mdl in modelos)
+                foreach(var mdl in modelosDto.modelos.ToList())
                 {
-                    mdl.MarcaId = m.codigo;
+                    Modelo mnovo = _mapper.Map<Modelo>(mdl);
+                    mnovo.MarcaId = m.codigo;
+                    modelos.Add(mnovo);
                 }
 
             }
