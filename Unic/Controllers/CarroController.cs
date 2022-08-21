@@ -36,32 +36,17 @@ namespace Unic.Controllers
             return View();
         }
 
-        public IActionResult att()
+        public async Task<IActionResult> att()
         {
-            var marcas = _carroRepository.GetApiMarcas();
-            var marcasDbo = _context.Marca.ToList();
-
-            if(marcas.Count > marcasDbo.Count)
+            try
             {
-                foreach (var m in marcas)
-                {
-                    _context.Marca.Add(m);
-                    _context.SaveChanges();
-                }
+                await _carroRepository.GetApiAnos();
+                return Ok();
             }
-            
-            var modelos = _carroRepository.GetApiModelos();
-            var modelosDbo = _context.Modelo.ToList();
-
-            if (modelos.Count > modelosDbo.Count)
+            catch(Exception e)
             {
-                foreach (var mdl in modelos)
-                {
-                    _context.Modelo.Add(mdl);
-                    _context.SaveChanges();
-                }
+                return Json(e.Message);
             }
-            return Ok();
         }
 
         [HttpPost]
@@ -186,6 +171,69 @@ namespace Unic.Controllers
                 return NotFound();
             }
             catch(Exception e)
+            {
+                return Json(e.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("Carro/verificarMarcas")]
+        public IActionResult verificarMarcas()
+        {
+            try
+            {
+                List<Marca> marca = _carroRepository.verificarMarcas();
+
+                if (marca != null)
+                {
+                    return Ok(marca);
+                }
+
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return Json(e.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("Carro/verificarModelosMarcas/{MarcaId}")]
+        public IActionResult verificarModelosMarcas(int MarcaId)
+        {
+            try
+            {
+                List<Modelo> modelo = _carroRepository.verificarModelosMarcas(MarcaId);
+
+                if (modelo != null)
+                {
+                    return Ok(modelo);
+                }
+
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return Json(e.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("Carro/verificarAnosModelo/{Modeloid}")]
+        public IActionResult verificarAnosModelo(int Modeloid)
+        {
+            try
+            {
+                List<Anos> Anos = _carroRepository.verificarAnosModelo(Modeloid);
+
+                if (Anos != null)
+                {
+                    return Ok(Anos);
+                }
+
+                return NotFound();
+            }
+            catch (Exception e)
             {
                 return Json(e.Message);
             }

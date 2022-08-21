@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Unic.Data;
 
 namespace Unic.Migrations
 {
     [DbContext(typeof(UnicContext))]
-    partial class UnicContextModelSnapshot : ModelSnapshot
+    [Migration("20220821161353_CorrecaoAn")]
+    partial class CorrecaoAn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,7 +49,7 @@ namespace Unic.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AnoModeloId")
+                    b.Property<int>("AnoModelo")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DataCadastro")
@@ -66,11 +68,13 @@ namespace Unic.Migrations
                     b.Property<int>("KM")
                         .HasColumnType("int");
 
-                    b.Property<int>("MarcaId")
-                        .HasColumnType("int");
+                    b.Property<string>("Marca")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ModeloId")
-                        .HasColumnType("int");
+                    b.Property<string>("Modelo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PessoaCompradora")
                         .HasColumnType("nvarchar(max)");
@@ -95,15 +99,6 @@ namespace Unic.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AnoModeloId")
-                        .IsUnique();
-
-                    b.HasIndex("MarcaId")
-                        .IsUnique();
-
-                    b.HasIndex("ModeloId")
-                        .IsUnique();
 
                     b.ToTable("Carro");
                 });
@@ -233,33 +228,6 @@ namespace Unic.Migrations
                     b.ToTable("Pessoa");
                 });
 
-            modelBuilder.Entity("Unic.Models.Carro", b =>
-                {
-                    b.HasOne("Unic.Models.Anos", "AnoModelo")
-                        .WithOne("Carro")
-                        .HasForeignKey("Unic.Models.Carro", "AnoModeloId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Unic.Models.Marca", "Marca")
-                        .WithOne("Carro")
-                        .HasForeignKey("Unic.Models.Carro", "MarcaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Unic.Models.Modelo", "Modelo")
-                        .WithOne("Carro")
-                        .HasForeignKey("Unic.Models.Carro", "ModeloId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AnoModelo");
-
-                    b.Navigation("Marca");
-
-                    b.Navigation("Modelo");
-                });
-
             modelBuilder.Entity("Unic.Models.Manutencao", b =>
                 {
                     b.HasOne("Unic.Models.Carro", "Carro")
@@ -282,11 +250,6 @@ namespace Unic.Migrations
                     b.Navigation("Endereco");
                 });
 
-            modelBuilder.Entity("Unic.Models.Anos", b =>
-                {
-                    b.Navigation("Carro");
-                });
-
             modelBuilder.Entity("Unic.Models.Carro", b =>
                 {
                     b.Navigation("Manutencoes");
@@ -295,16 +258,6 @@ namespace Unic.Migrations
             modelBuilder.Entity("Unic.Models.Endereco", b =>
                 {
                     b.Navigation("Pessoa");
-                });
-
-            modelBuilder.Entity("Unic.Models.Marca", b =>
-                {
-                    b.Navigation("Carro");
-                });
-
-            modelBuilder.Entity("Unic.Models.Modelo", b =>
-                {
-                    b.Navigation("Carro");
                 });
 #pragma warning restore 612, 618
         }

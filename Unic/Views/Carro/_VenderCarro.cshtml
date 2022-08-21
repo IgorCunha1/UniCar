@@ -1,79 +1,77 @@
-﻿
-        <div class="modal fade" id="movimentarCarro" role="dialog" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Editar Carro</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="form-row">
-                                <input ng-model="CarroId" hidden />
-                                <div class="form-group col-sm-6">
-                                    <label for="Marca">Marca</label>
-                                    <input class="form-control" id="exMarca" ng-model="exMarca" readonly />
-                                </div>
-                                <div class="form-group col-sm-6">
-                                    <label for="Modelo">Modelo</label>
-                                    <input class="form-control" id="exModelo" ng-model="exModelo" readonly />
-                                </div>
+﻿<div ng-app="Unic" ng-controller="CarroController">
+    <div class="modal fade" id="movimentarCarro" role="dialog" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Editar Carro</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-row">
+                            <input ng-model="CarroId" hidden />
+                            <div class="form-group col-sm-6">
+                                <label for="Marca">Marca</label>
+                                <input class="form-control" id="exMarca" ng-model="exMarca" readonly />
                             </div>
-                            <hr size="50">
-                            <div class="form-row">
-                                <div class="form-group col-sm-6">
-                                    <label for="Placa">Placa</label>
-                                    <input id="Placa" type="text" class="form-control" ng-model="exPlaca" readonly />
-                                </div>
+                            <div class="form-group col-sm-6">
+                                <label for="Modelo">Modelo</label>
+                                <input class="form-control" id="exModelo" ng-model="exModelo" readonly />
                             </div>
-                            <div class="form-row">
-                                <div class="form-group col-sm-6">
-                                    <label for="AnoFabricacao">Ano Fabricacao</label>
-                                    <input id="AnoFabricacao" type="number" class="form-control" min="1990" max="2080" ng-model="exAnoFabricacao" readonly />
-                                </div>
-                                <div class="form-group col-sm-6">
-                                    <label for="AnoModelo">Ano Modelo</label>
-                                    <input id="AnoModelo" type="number" class="form-control" ng-model="exAnoModelo" readonly />
-                                </div>
-                                <div class="form-group col-sm-6">
-                                    <label for="KM">KM</label>
-                                    <input id="KM" type="number" class="form-control" ng-model="exKM" required="required" />
-                                </div>
-                                <div class="form-group col-sm-6">
-                                    <label for="Descricao">Descricao</label>
-                                    <input id="Descricao" type="text" class="form-control" ng-model="exDescricao" required="required" />
-                                </div>
-                                <div class="form-group col-sm-6">
-                                    <label for="PrecoVenda">Preco Venda</label>
-                                    <input id="PrecoVenda" type="number" class="form-control money" ng-model="exPrecoVenda" required="required" />
-                                </div>
-                                <div class="form-group col-sm-6">
-                                    <label for="PessoaCompradora">Pessoa Compradora</label>
-                                    <input id="PessoaCompradora" type="text" class="form-control" ng-model="exPessoaCompradora" required="required" />
-                                </div>
+                        </div>
+                        <hr size="50">
+                        <div class="form-row">
+                            <div class="form-group col-sm-6">
+                                <label for="Placa">Placa</label>
+                                <input id="Placa" type="text" class="form-control" ng-model="exPlaca" readonly />
                             </div>
-                            <div class="form-row">
-                                <div class="col-sm-6 align-baseline" style="text-align:left; font-size:20px;">
+                            <div class="form-group col-sm-6">
+                                <label for="AnoModelo">Ano Modelo</label>
+                                <input id="AnoModelo" type="text" class="form-control" ng-model="exAnoModelo" readonly />
+                            </div>
+                        </div>
+                        <div class="form-row">
 
-                                    <label id="status" class="badge badge-success rounded-pill d-inline" ng-if="exStatus == 1">
-                                        Disponivel
-                                    </label>
-                                    <label id="status" class="badge badge-primary rounded-pill d-inline" ng-if="exStatus == 2">
-                                        Vendido
-                                    </label>
-                                    <label id="status" class="badge badge-warning rounded-pill d-inline" ng-if="exStatus == 3">
-                                        Negociação
-                                    </label>
-                                </div>
+                            <div class="form-group col-sm-6">
+                                <label for="KM">KM</label>
+                                <input id="KM" type="number" class="form-control" ng-model="exKM" />
                             </div>
-                        </form>
-                        <hr />
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" id="botaoSalvar" class="btn btn-success" ng-disabled="error || incomplete" ng-click="EditarCarro()" style="display:block">Editar</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="LimparCampo()">Cancelar</button>
-                    </div>
+                            <div class="form-group col-sm-6">
+                                <label for="Descricao">Descricao</label>
+                                <input id="Descricao" type="text" class="form-control" ng-model="exDescricao" readonly />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="PrecoVenda">Preco Venda</label>
+                                <input id="PrecoVenda" type="number" class="form-control money" ng-model="exPrecoVenda" required="required" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="PessoaCompradora">Pessoa Compradora</label>
+                                <input id="PessoaCompradora" type="text" class="form-control" ng-model="exPessoaCompradora" required="required" />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-sm-6 align-baseline" style="text-align:left; font-size:20px;">
+
+                                <label id="status" class="badge badge-success rounded-pill d-inline" ng-if="exStatus == 1">
+                                    Disponivel
+                                </label>
+                                <label id="status" class="badge badge-primary rounded-pill d-inline" ng-if="exStatus == 2">
+                                    Vendido
+                                </label>
+                                <label id="status" class="badge badge-warning rounded-pill d-inline" ng-if="exStatus == 3">
+                                    Negociação
+                                </label>
+                            </div>
+                        </div>
+                    </form>
                     <hr />
                 </div>
+                <div class="modal-footer">
+                    <button type="submit" id="botaoSalvar" class="btn btn-success" ng-disabled="error || incomplete" ng-click="EditarCarro()" style="display:block">Editar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="LimparCampo()">Cancelar</button>
+                </div>
+                <hr />
             </div>
         </div>
+    </div>
+</div>

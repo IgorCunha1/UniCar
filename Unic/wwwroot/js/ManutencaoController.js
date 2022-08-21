@@ -60,9 +60,9 @@ app.controller('ManutencaoController', ['$scope', 'serviceManutencao', function 
          serviceManutencao.SelecionarCarroPorPlaca(placa).then(function (response){
              $scope.Carro = response.data;
              console.log($scope.Carro);
-             $scope.Marca = $scope.Carro.marca;
-             $scope.Modelo = $scope.Carro.modelo;
-             $scope.Ano = $scope.Carro.anoModelo;
+             $scope.Marca = $scope.Carro.marca.nome;
+             $scope.Modelo = $scope.Carro.modelo.nome;
+             $scope.Ano = $scope.Carro.anoModelo.nome;
              $scope.KM =$scope.Carro.km;
              $scope.Descricao = $scope.Carro.descricao;
              $scope.PrecoCompra = $scope.Carro.precoCompra;

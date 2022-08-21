@@ -97,35 +97,103 @@ namespace Unic.Repositories
 
             return marcas;
         }
-        public List<Modelo> GetApiModelos()
+        public async Task GetApiModelos()
         {
-            var marcasDbo = _context.Marca.ToList();
+            try
+            {
 
-            HttpWebRequest requisicaoWeb = null;
-            var modelos = new List<Modelo>();
+                var marcasDbo = _context.Marca.ToList();
+
+                HttpWebRequest requisicaoWeb = null;
+                var modelos = new List<Modelo>();
+                var anos = new List<Anos>();
             
 
-            foreach (var m in marcasDbo)
-            {
-                requisicaoWeb = WebRequest.CreateHttp("https://parallelum.com.br/fipe/api/v1/carros/marcas/"+m.codigo+"/modelos");
-                requisicaoWeb.Method = "GET";
-                requisicaoWeb.ContentType = "Json";
-                var resposta = requisicaoWeb.GetResponse();
-                var dados = resposta.GetResponseStream();
-                StreamReader reader = new StreamReader(dados);
-                object objResposta = reader.ReadToEnd();
-                var modelosDto = JsonConvert.DeserializeObject<ModeloAnoDto>(objResposta.ToString());
-
-                foreach(var mdl in modelosDto.modelos.ToList())
+                foreach (var m in marcasDbo)
                 {
-                    Modelo mnovo = _mapper.Map<Modelo>(mdl);
-                    mnovo.MarcaId = m.codigo;
-                    modelos.Add(mnovo);
+                    requisicaoWeb = WebRequest.CreateHttp("https://parallelum.com.br/fipe/api/v1/carros/marcas/"+m.codigo+"/modelos");
+                    requisicaoWeb.Method = "GET";
+                    requisicaoWeb.ContentType = "Json";
+                    var resposta = requisicaoWeb.GetResponse();
+                    var dados = resposta.GetResponseStream();
+                    StreamReader reader = new StreamReader(dados);
+                    object objResposta = reader.ReadToEnd();
+                    var modelosDto = JsonConvert.DeserializeObject<ModeloAnoDto>(objResposta.ToString());
+                    
+                    foreach(var mdl in modelosDto.modelos.ToList())
+                    {
+                        Modelo mnovo = _mapper.Map<Modelo>(mdl);
+                        mnovo.MarcaId = m.codigo;
+                        modelos.Add(mnovo);
+                        await _context.Modelo.AddAsync(mnovo);
+                        await _context.SaveChangesAsync();
+                    }
                 }
-
+            }
+            catch(Exception e)
+            {
+                throw new Exception(e.Message);
             }
 
-            return modelos;
+            
         }
+
+        public async Task GetApiAnos()
+        {
+            var modelosDbo = _context.Modelo.ToList();
+
+            HttpWebRequest requisicaoWeb = null;
+            
+            foreach (var m in modelosDbo)
+            {
+                requisicaoWeb = WebRequest.CreateHttp("https://parallelum.com.br/fipe/api/v1/carros/marcas/"+m.MarcaId+"/modelos/"+m.codigo+"/anos");
+                requisicaoWeb.Method = "GET";
+                requisicaoWeb.ContentType = "Json";
+
+                var resposta = await requisicaoWeb.GetResponseAsync();
+                var dados = resposta.GetResponseStream();
+
+                StreamReader reader = new StreamReader(dados);
+                object objResposta = await reader.ReadToEndAsync();
+                var anos = JsonConvert.DeserializeObject<List<Anos>>(objResposta.ToString());
+
+                var anosModelosDbo = verificarAnosModelo(m.codigo);
+
+                if (anos != null && anosModelosDbo.Count() < anos.Count())
+                {
+                    foreach (var a in anos)
+                    {
+                        Anos novoAno = _mapper.Map<Anos>(a);
+                        novoAno.modeloID = m.codigo;
+
+                        await _context.Anos.AddAsync(novoAno);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                resposta.Close();
+
+            }
+        }
+
+        public List<Marca> verificarMarcas()
+        {
+            var marcas = _context.Marca.ToList();
+            return marcas.ToList();
+        }
+
+        public List<Modelo> verificarModelosMarcas(int MarcaId)
+        {
+            var modelos = _context.Modelo.ToList().Where(m => m.MarcaId == MarcaId);
+            return modelos.ToList();
+        }
+
+        public List<Anos> verificarAnosModelo(int Modeloid)
+            {
+                var anos = _context.Anos.ToList().Where(a => a.modeloID == Modeloid);
+                return anos.ToList();
+            }
+
+
+
     }
 }

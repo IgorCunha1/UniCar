@@ -39,7 +39,7 @@ namespace Unic.Repositories
                 await _context.SaveChangesAsync();
             }catch(Exception e)
             {
-                throw new Exception(message: "Erro ao concluir a operação");
+                throw new Exception(message: "Erro ao concluir a operação", e);
             }
         }
 

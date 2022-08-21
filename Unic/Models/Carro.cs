@@ -22,14 +22,7 @@ namespace Unic.Models
         [Required]
         public int Id { get; set; }
        
-        [Required]
-        public string Marca { get; set; }
-
-        [Required]
-        public string Modelo { get; set; }
-
-        [Required]
-        public int AnoModelo { get; set; }
+        
 
         [Required]
         public int KM { get; set; }
@@ -39,14 +32,11 @@ namespace Unic.Models
 
         [Required]
         public string Descricao { get; set; }
-
         
         public decimal PrecoVenda { get; set; }
-
         
         public decimal PrecoCompra { get; set; }
 
-        
         public string PessoaCompradora { get; set; }
 
         
@@ -55,19 +45,30 @@ namespace Unic.Models
         [Required]
         public StatusCarro Status { get; set; }
 
-        
         public DateTime DataCadastro { get; set; }
 
-        
         public DateTime DataCompra { get; set; }
 
-      
         public DateTime DataVenda { get; set; }
+
+        public decimal ValorTotalManutencao { get; set; }
+
+        public int MarcaId { get; set; }
+
+        public int ModeloId { get; set; }
+
+        public int AnoModeloId { get; set; }
 
         public virtual List<Manutencao> Manutencoes { get; set; }
 
-        
-        public decimal ValorTotalManutencao { get; set; }
+        [Required]
+        public virtual Marca Marca { get; set; }
+
+        [Required]
+        public virtual Modelo Modelo { get; set; }
+
+        [Required]
+        public virtual Anos AnoModelo { get; set; }
 
     }
 }

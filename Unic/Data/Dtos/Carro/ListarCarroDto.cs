@@ -12,18 +12,6 @@ namespace Unic.Data.Dtos.Carro
     {
 
         [Required]
-        public string Marca { get; set; }
-
-        [Required]
-        public string Modelo { get; set; }
-
-        [Required]
-        public int AnoFabricacao { get; set; }
-
-        [Required]
-        public int AnoModelo { get; set; }
-
-        [Required]
         public string Descricao { get; set; }
 
         [Required]
@@ -38,6 +26,14 @@ namespace Unic.Data.Dtos.Carro
         [Required]
         public virtual List<Unic.Models.Manutencao> Manutencoes{ get; set; }
 
+        [Required]
+        public virtual Marca Marca { get; set; }
+
+        [Required]
+        public virtual Modelo Modelo { get; set; }
+
+        [Required]
+        public virtual Anos AnoModelo { get; set; }
 
     }
 }

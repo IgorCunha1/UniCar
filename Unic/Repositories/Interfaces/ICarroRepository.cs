@@ -15,6 +15,11 @@ namespace Unic.Repositories.Interfaces
         Task AdicionarCarro(Carro carro);
         bool ValidarPlaca(string placa);
         List<Marca> GetApiMarcas();
-        List<Modelo> GetApiModelos();
+        Task GetApiModelos();
+        Task GetApiAnos();
+
+        List<Marca> verificarMarcas();
+        List<Modelo> verificarModelosMarcas(int MarcaId);
+        List<Anos> verificarAnosModelo(int Modeloid);
     }
 }

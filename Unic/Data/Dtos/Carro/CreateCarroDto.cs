@@ -10,28 +10,19 @@ namespace Unic.Data.Dtos.Carro
     public class CreateCarroDto
     {
         [Required]
-        public string Marca { get; set; }
+        public string MarcaId { get; set; }
 
         [Required]
-        public string Modelo { get; set; }
-
-        //[Required]
-        //public int AnoFabricacao { get; set; }
+        public string ModeloId { get; set; }
 
         [Required]
-        public int AnoModelo { get; set; }
+        public string AnoModeloId { get; set; }
 
         [Required]
         public int KM { get; set; }
 
         [Required]
         public string Descricao { get; set; }
-
-        //[Required]
-        //public decimal PrecoVenda { get; set; }
-                
-        //[Required]
-        //public string PessoaCompradora { get; set; }
 
         [Required]
         public string PessoaVendedora { get; set; }

@@ -36,13 +36,13 @@ app.factory('serviceCarro', ['$http', function ($http) {
     }
 
     service.CarregarMarcas = function(){
-        return $http.get('https://parallelum.com.br/fipe/api/v1/carros/marcas');
+        return $http.get('Carro/verificarMarcas');
     }
     service.CarregarModelos = function(id){
-        return $http.get(`https://parallelum.com.br/fipe/api/v1/carros/marcas/`+id+`/modelos`);
+        return $http.get(`Carro/verificarModelosMarcas/`+id);
     }
-    service.CarregarAnos = function (codMarca, codModelo) {
-        return $http.get(`https://parallelum.com.br/fipe/api/v1/carros/marcas/` + codMarca+`/modelos/` + codModelo + `/anos`);
+    service.CarregarAnos = function (codMarca) {
+        return $http.get(`Carro/verificarAnosModelo/`+codMarca);
     }
     service.verificarPlaca = function(placa){
         return $http.post('https://sinesp.contrateumdev.com.br/api', placa)
@@ -61,7 +61,7 @@ app.controller('CarroController', ['$scope', 'serviceCarro', '$http', function (
     }
 
       $scope.ListarCarros = function () {
-        console.log($scope.Carros);
+        
         serviceCarro.ListarCarros().then(function (response) {
             $scope.Carros = response.data;
             $scope.totalItems = $scope.Carros.length;           
@@ -71,23 +71,20 @@ app.controller('CarroController', ['$scope', 'serviceCarro', '$http', function (
         
     $scope.verificarPlaca = function(){
         let placa = document.getElementById('placaa').value;
-        //  alert(placa);
          serviceCarro.verificarPlaca(placa).then(function (response){
-            console.log(response);
+            
          })
     }
 
-    $scope.CarregarMarcas = function(){
+    $scope.CarregarMarcas = function () {
         serviceCarro.CarregarMarcas().then(function(response){
             $scope.marcas = response.data;
-            
+           
         });
     };
 
     $scope.CarregarModelos = function(id){
-        console.log(id);
          serviceCarro.CarregarModelos(id).then(function(response){
-              console.log(response.data);
         });
     }
 
@@ -97,12 +94,19 @@ app.controller('CarroController', ['$scope', 'serviceCarro', '$http', function (
             
       select.addEventListener('change', function(){
         carro = JSON.parse(select.value);
-           serviceCarro.CarregarModelos(carro.codigo).then(function(response){
-               $scope.modelos = response.data.modelos;
-               /*$scope.Anos = response.data.anos;*/
+           serviceCarro.CarregarModelos(carro).then(function(response){
+               $scope.modelos = response.data;
                
            })
       });
+    var selectModelo = document.querySelector('#Modelo');
+    var m = {};
+    selectModelo.addEventListener('change', function () {
+        m = JSON.parse(selectModelo.value);
+        serviceCarro.CarregarAnos(m).then(function (response) {
+            $scope.AnosModelos = response.data;
+        })
+    });
 
     $scope.quantidade = 10;
 
@@ -133,8 +137,6 @@ app.controller('CarroController', ['$scope', 'serviceCarro', '$http', function (
             }
         })
 
-
-       
     }
   
     $scope.exibirEditar = function(){
@@ -150,16 +152,12 @@ app.controller('CarroController', ['$scope', 'serviceCarro', '$http', function (
     }
 
     $scope.SelecionarCarro = function(id){
-        $scope.exibirEditar();
-        console.log(id)        
         serviceCarro.SelecionarCarro(id).then(function (response){
             $('#movimentarCarro').modal('show');
             $scope.CarroId = response.data.id;
-            // console.log(response);
-            $scope.exMarca = response.data.marca;
-            $scope.exModelo = response.data.modelo;
-            $scope.exAnoFabricacao = response.data.anoFabricacao;
-            $scope.exAnoModelo = response.data.anoModelo;
+            $scope.exMarca = response.data.marca.nome;
+            $scope.exModelo = response.data.modelo.nome;
+            $scope.exAnoModelo = response.data.anoModelo.nome;
             $scope.exKM = response.data.km;
             $scope.exDescricao = response.data.descricao;
             $scope.exPrecoVenda = response.data.precoVenda;
@@ -174,25 +172,23 @@ app.controller('CarroController', ['$scope', 'serviceCarro', '$http', function (
     $scope.AdicionarCarro = function (){
         
         $scope.Carro = {};
-         var precoVenda = $scope.PrecoVenda.replace(/[^a-z0-9]/gi, '');
+         //var precoVenda = $scope.PrecoVenda.replace(/[^a-z0-9]/gi, '');
          var precoCompra = $scope.PrecoCompra.replace(/[^a-z0-9]/gi, '');
          var placa = $scope.Placa.replace(/[^a-z0-9]/gi, '');
 
-         $scope.Carro.Marca = carro.nome;
-         $scope.Carro.Modelo = $scope.Modelo;
-         $scope.Carro.AnoModelo = $scope.AnoModelo;
+         $scope.Carro.MarcaId = $scope.Marca;
+         $scope.Carro.ModeloId = $scope.Modelo;
+         $scope.Carro.AnoModeloId = $scope.AnoModelo;
+
          $scope.Carro.KM = $scope.KM;
          $scope.Carro.Descricao = $scope.Descricao;
          $scope.Carro.PrecoCompra = precoCompra;
          $scope.Carro.PessoaVendedora = $scope.PessoaVendedora;
          $scope.Carro.Status = "1";
          $scope.Carro.Placa = placa;
-         
-        $http({
-            method: "POST",
-            url: "https://localhost:44305/Carro/AdicionarCarro",
-            data: $scope.Carro
-        }).then(function successCallback(response) {
+                 
+        
+        serviceCarro.AdicionarCarro($scope.Carro).then(function successCallback(response) {
 
                     Swal.fire({
                         position: 'center',
@@ -231,7 +227,7 @@ app.controller('CarroController', ['$scope', 'serviceCarro', '$http', function (
         $scope.Carro.Status = $scope.exStatus;
 
             serviceCarro.EditarCarro($scope.Carro.id, $scope.Carro).then(function(response){
-                console.log(response);
+                
             })
     }
 

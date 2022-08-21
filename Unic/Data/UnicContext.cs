@@ -26,6 +26,21 @@ namespace Unic.Data
                 .WithOne(Manutencao => Manutencao.Carro)
                 .HasForeignKey(Manutencao => Manutencao.CarroId);
 
+            builder.Entity<Marca>()
+                .HasOne(Marca => Marca.Carro)
+                .WithOne(Carro => Carro.Marca)
+                .HasForeignKey<Carro>(Carro => Carro.MarcaId);
+
+            builder.Entity<Modelo>()
+                .HasOne(Modelo => Modelo.Carro)
+                .WithOne(Carro => Carro.Modelo)
+                .HasForeignKey<Carro>(Carro => Carro.ModeloId);
+
+            builder.Entity<Anos>()
+                .HasOne(Anos => Anos.Carro)
+                .WithOne(Carro => Carro.AnoModelo)
+                .HasForeignKey<Carro>(Carro => Carro.AnoModeloId);
+
         }
 
         public DbSet<Pessoa> Pessoa { get; set; }
@@ -34,6 +49,7 @@ namespace Unic.Data
         public DbSet<Manutencao> Manutencao { get; set; }
         public DbSet<Marca> Marca { get; set; }
         public DbSet<Modelo> Modelo { get; set; }
+        public DbSet<Anos> Anos { get; set; }
 
 
 
