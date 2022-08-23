@@ -1,77 +1,149 @@
-﻿<div ng-app="Unic" ng-controller="CarroController">
+﻿    
+
+<div  ng-app="Unic" ng-controller="CarroController">
     <div class="modal fade" id="movimentarCarro" role="dialog" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content">
+            <div class="modal-content" >
                 <div class="modal-header">
-                    <h4 class="modal-title">Editar Carro</h4>
+                    <h4 class="modal-title" id="Placa">{{exPlaca}}</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <form>
-                        <div class="form-row">
-                            <input ng-model="CarroId" hidden />
-                            <div class="form-group col-sm-6">
-                                <label for="Marca">Marca</label>
-                                <input class="form-control" id="exMarca" ng-model="exMarca" readonly />
-                            </div>
-                            <div class="form-group col-sm-6">
-                                <label for="Modelo">Modelo</label>
-                                <input class="form-control" id="exModelo" ng-model="exModelo" readonly />
-                            </div>
-                        </div>
-                        <hr size="50">
-                        <div class="form-row">
-                            <div class="form-group col-sm-6">
-                                <label for="Placa">Placa</label>
-                                <input id="Placa" type="text" class="form-control" ng-model="exPlaca" readonly />
-                            </div>
-                            <div class="form-group col-sm-6">
-                                <label for="AnoModelo">Ano Modelo</label>
-                                <input id="AnoModelo" type="text" class="form-control" ng-model="exAnoModelo" readonly />
-                            </div>
-                        </div>
-                        <div class="form-row">
+                    
+                        <form>
+                            <div class="container small">
+                                <div id="conteudo" style="background-color:white;">
+                                    <div class="form-row">
+                                        <input ng-model="CarroId" hidden />
+                                        <div class="form-group col-sm-3">
+                                            <strong>Marca: </strong>{{exMarca}}
+                                        </div>
+                                        <div class="form-group col-sm-9">
+                                            <strong>Modelo: </strong>{{exModelo}}
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <strong>Ano: </strong>{{exAnoModelo}}
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <strong>KM: </strong>{{exKM}}
+                                        </div>
+                                        <div class="form-group col-sm-12">
+                                            <strong>Descrição: </strong>{{exDescricao}}
+                                        </div>
+                                        <div class="form-group col-sm-12">
+                                            <table class="table table-bordered" style="text-align: center;">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Manutencao</th>
+                                                        <th>Descrição</th>
+                                                        <th>Valor</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="ma in exManutencoes">
+                                                        <td>{{ma.origem}}</td>
+                                                        <td>{{ma.descricao}}</td>
+                                                        <td class="money">{{ma.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <table class="table table-borderless table-striped" style="text-align:right;">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="">
+                                                        <td class="col-sm-4"></td>
+                                                        <td><strong>Total Custo</strong></td>
+                                                        <td class="money">{{exValorTotalManutencao.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });}}</td>
+                                                    </tr>
+                                                    <tr class="">
+                                                        <td class="col-sm-4"></td>
+                                                        <td><strong>Preco Compra</strong></td>
+                                                        <td>{{exPrecoCompra.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });}}</td>
+                                                    </tr>
+                                                    <tr class="">
+                                                        <td class="col-sm-4"></td>
+                                                        <td><strong>Custo Total</strong></td>
+                                                        <td style="color:red;">{{calcCusto.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="col-sm-4"></td>
+                                                        <td><h4><strong>Lucro</strong></h4></td>
+                                                        <td style="color:blue;">{{lucro.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        </div>
+                                    </div>
 
-                            <div class="form-group col-sm-6">
-                                <label for="KM">KM</label>
-                                <input id="KM" type="number" class="form-control" ng-model="exKM" />
-                            </div>
-                            <div class="form-group col-sm-6">
-                                <label for="Descricao">Descricao</label>
-                                <input id="Descricao" type="text" class="form-control" ng-model="exDescricao" readonly />
-                            </div>
-                            <div class="form-group col-sm-6">
-                                <label for="PrecoVenda">Preco Venda</label>
-                                <input id="PrecoVenda" type="number" class="form-control money" ng-model="exPrecoVenda" required="required" />
-                            </div>
-                            <div class="form-group col-sm-6">
-                                <label for="PessoaCompradora">Pessoa Compradora</label>
-                                <input id="PessoaCompradora" type="text" class="form-control" ng-model="exPessoaCompradora" required="required" />
-                            </div>
+                                    <hr />
+                                    <div class="form-row">
+                                        <div class="form-group col-sm-12">
+                                            <h4>Informações de venda</h4>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-sm-6">
+                                            <label for="PrecoVenda">Preco Venda</label>
+                                            <input id="PrecoVenda" type="text" class="form-control money" ng-model="exPrecoVenda" required="required" />
+                                        </div>
+                                        <div class="form-group col-sm-6">
+                                            <label for="PessoaCompradora">Pessoa Compradora</label>
+                                            <input id="PessoaCompradora" type="text" class="form-control" ng-model="exPessoaCompradora" required="required" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+</form>
+                    
+                    <div class="text-sm-right">
+                        <div class="col-sm-6 align-baseline" style="text-align:left; font-size:15px;">
+                            <label id="status" class="badge badge-success rounded-pill d-inline" ng-if="exStatus == 1">
+                                Disponivel
+                            </label>
+                            <label id="status" class="badge badge-primary rounded-pill d-inline" ng-if="exStatus == 2">
+                                Vendido
+                            </label>
+                            <label id="status" class="badge badge-warning rounded-pill d-inline" ng-if="exStatus == 3">
+                                Negociação
+                            </label>
                         </div>
-                        <div class="form-row">
-                            <div class="col-sm-6 align-baseline" style="text-align:left; font-size:20px;">
-
-                                <label id="status" class="badge badge-success rounded-pill d-inline" ng-if="exStatus == 1">
-                                    Disponivel
-                                </label>
-                                <label id="status" class="badge badge-primary rounded-pill d-inline" ng-if="exStatus == 2">
-                                    Vendido
-                                </label>
-                                <label id="status" class="badge badge-warning rounded-pill d-inline" ng-if="exStatus == 3">
-                                    Negociação
-                                </label>
-                            </div>
-                        </div>
-                    </form>
-                    <hr />
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" id="botaoSalvar" class="btn btn-success" ng-disabled="error || incomplete" ng-click="EditarCarro()" style="display:block">Editar</button>
                     <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="LimparCampo()">Cancelar</button>
+                    <button class="btn btn-info" id="gerarPDF">Imprimir</button>
                 </div>
+
                 <hr />
+                
             </div>
         </div>
     </div>
 </div>
+
+<script>
+            let doc = new jsPDF('portrait', 'pt', 'a4');
+
+            let btn = document.getElementById('gerarPDF');
+
+            let conteudo = document.getElementById('conteudo');
+            
+
+            btn.addEventListener('click', function() {
+
+            doc.addHTML(conteudo, 0, 10, function() {
+
+                var blob = doc.output("blob");
+                window.open(URL.createObjectURL(blob));
+            });
+
+            })
+</script>

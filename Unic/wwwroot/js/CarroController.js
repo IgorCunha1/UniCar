@@ -166,8 +166,34 @@ app.controller('CarroController', ['$scope', 'serviceCarro', '$http', function (
             $scope.exPessoaVendedora = response.data.pessoaVendedora;
             $scope.exStatus = response.data.status;
             $scope.exPlaca = response.data.placa;
+            $scope.exManutencoes = response.data.manutencoes;
+            $scope.exValorTotalManutencao = response.data.valorTotalManutencao;
+
+            $scope.calcCusto = $scope.exPrecoCompra + $scope.exValorTotalManutencao;
+            console.log(response.data);
         })
     }
+
+    $(document).ready(function () {
+        $("#imprimir").click(function () {
+            //get the modal box content and load it into the printable div
+            $(".printable").html($("#movimentarCarro").html());
+            $(".printable").printThis();
+        });
+    });
+
+    $scope.lucro = 0;
+    var inputVenda = document.querySelector('#PrecoVenda');
+    inputVenda.addEventListener('change', function () {
+        $scope.lucro = 0;
+        if (inputVenda.value.replace(/[^a-z0-9]/gi, '') <= 0) {
+            $scope.lucro = 0;
+            console.log('Menor ou igual que zero')
+        } else {
+            $scope.lucro = inputVenda.value.replace(/[^a-z0-9]/gi, '') - $scope.calcCusto;
+        }
+        
+    });
 
     $scope.AdicionarCarro = function (){
         
