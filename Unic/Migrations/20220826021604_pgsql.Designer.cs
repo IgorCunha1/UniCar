@@ -10,8 +10,8 @@ using Unic.Data;
 namespace Unic.Migrations
 {
     [DbContext(typeof(UnicContext))]
-    [Migration("20220826015258_aasas")]
-    partial class aasas
+    [Migration("20220826021604_pgsql")]
+    partial class pgsql
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
