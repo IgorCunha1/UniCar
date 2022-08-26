@@ -47,9 +47,6 @@ app.factory('serviceCarro', ['$http', function ($http) {
     service.verificarPlaca = function(placa){
         return $http.post('https://sinesp.contrateumdev.com.br/api', placa)
     }
-    service.verificarTabelaFipe = function (nMarca, nModelo, nAnos) {
-        return $http.get('https://parallelum.com.br/fipe/api/v1/carros/marcas/'+nMarca+'/modelos/'+nModelo+'/anos/'+nAnos+'')
-    }
 
     return service;
 }]);
@@ -171,12 +168,9 @@ app.controller('CarroController', ['$scope', 'serviceCarro', '$http', function (
             $scope.exPlaca = response.data.placa;
             $scope.exManutencoes = response.data.manutencoes;
             $scope.exValorTotalManutencao = response.data.valorTotalManutencao;
-            $scope.calcCusto = $scope.exPrecoCompra + $scope.exValorTotalManutencao;
 
-            serviceCarro.verificarTabelaFipe(response.data.marca.codigo, response.data.modelo.codigo, response.data.anoModelo.codigo).then(function (response) {
-                $scope.valorFipe = response.data.Valor;
-            });
-            
+            $scope.calcCusto = $scope.exPrecoCompra + $scope.exValorTotalManutencao;
+            console.log(response.data);
         })
     }
 
