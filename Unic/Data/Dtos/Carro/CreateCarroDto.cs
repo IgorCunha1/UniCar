@@ -25,6 +25,9 @@ namespace Unic.Data.Dtos.Carro
         public string Descricao { get; set; }
 
         [Required]
+        public string PrecoCompra { get; set; }
+
+        [Required]
         public string PessoaVendedora { get; set; }
 
         [Required]

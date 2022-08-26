@@ -8,9 +8,9 @@ using Unic.Data;
 using AutoMapper;
 using Unic.Repositories.Interfaces;
 using Unic.Data.Dtos.Carro;
-using System.Net;
+using Microsoft.AspNetCore.Http;
 using System.IO;
-using Newtonsoft.Json;
+using System.Text;
 
 namespace Unic.Controllers
 {
@@ -43,7 +43,7 @@ namespace Unic.Controllers
                 await _carroRepository.GetApiAnos();
                 return Ok();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return Json(e.Message);
             }
@@ -51,7 +51,7 @@ namespace Unic.Controllers
 
         [HttpPost]
         [Route("Carro/AdicionarCarro")]
-        public async Task<IActionResult> AdicionarCarroAsync([FromBody]CreateCarroDto CarroDto)
+        public async Task<IActionResult> AdicionarCarroAsync([FromBody] CreateCarroDto CarroDto)
         {
             try
             {
@@ -59,8 +59,8 @@ namespace Unic.Controllers
                 {
                     return NoContent();
                 }
-                
-                if(CarroDto == null)
+
+                if (CarroDto == null)
                 {
                     return StatusCode(400, "Erro ao receber os Dados");
                 }
@@ -71,13 +71,13 @@ namespace Unic.Controllers
                 {
                     return BadRequest("A Placa digitada já consta na base atual");
                 }
-           
+
                 Carro Carro = _mapper.Map<Carro>(CarroDto);
                 await _carroRepository.AdicionarCarro(Carro);
 
                 return Ok();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return Json(e.Message);
             }
@@ -102,7 +102,7 @@ namespace Unic.Controllers
         [Route("Carro/EditarCarro/{id}")]
         public IActionResult Editar(int id, [FromBody] AlterarCarroDto CarroEditado)
         {
-            
+
             Carro carro = _context.Carro.FirstOrDefault(p => p.Id == id);
 
             carro = _mapper.Map<Carro>(CarroEditado);
@@ -111,7 +111,7 @@ namespace Unic.Controllers
             {
                 return NotFound();
             }
-            _context.SaveChanges();   
+            _context.SaveChanges();
             return Ok(carro);
         }
 
@@ -126,18 +126,19 @@ namespace Unic.Controllers
             {
                 CarroDto.Add(_mapper.Map<ListarCarroDto>(p));
             }
-            
+
             return Json(Carros);
         }
-        
+
         [HttpPost]
         [Route("Carro/Deletar/{id}")]
         public IActionResult Deletar(int id)
         {
-            try { 
+            try
+            {
 
                 Carro Carro = _context.Carro.FirstOrDefault(p => p.Id == id);
-                if(Carro != null)
+                if (Carro != null)
                 {
                     _context.Carro.Remove(Carro);
                     _context.SaveChanges();
@@ -147,11 +148,11 @@ namespace Unic.Controllers
                 {
                     return Json("Carro não Encontrado");
                 }
-                
+
             }
             catch (Exception ex)
             {
-               return Json(ex.Message);
+                return Json(ex.Message);
             }
         }
 
@@ -170,7 +171,7 @@ namespace Unic.Controllers
 
                 return NotFound();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return Json(e.Message);
             }
@@ -239,6 +240,45 @@ namespace Unic.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> MarcaUpload(IFormFile file)
+        {
+            try
+            {
+                string pasta = "imagens";
+                //upload para a pasta [files]
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/files", file.FileName);
 
+                var path = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/{pasta}", file.FileName);
+                var stream = new FileStream(path, FileMode.Create);
+                await file.CopyToAsync(stream);
+
+                FileStream meuArq = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Read);
+                StreamReader sr = new StreamReader(meuArq, Encoding.UTF8);
+
+                while (!sr.EndOfStream)
+                {
+                    string[] str = sr.ReadLine().Split(";");
+
+                    Marca importacao = null;
+
+                    var codigo = str[0];
+                    var nome = str[1];
+
+                    importacao = new Marca()
+                    {
+                        codigo = int.Parse(codigo),
+                        nome = nome
+                    };
+
+                }
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return Json(e);
+            }
+        }
     }
 }
