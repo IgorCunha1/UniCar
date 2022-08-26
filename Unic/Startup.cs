@@ -29,7 +29,7 @@ namespace Unic
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<UnicContext>(options =>
-                options.UseLazyLoadingProxies().UseSqlServer(
+                options.UseLazyLoadingProxies().UseNpgsql(
                     Configuration.GetConnectionString("Unic")));
 
             services.AddTransient<IPessoaRepository, PessoaRepository>();
