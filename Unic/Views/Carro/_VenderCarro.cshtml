@@ -9,10 +9,9 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    
-                        <form>
+                        <form style="">
                             <div class="container small">
-                                <div id="conteudo" style="background-color:white;">
+                                <div id="conteudo" style="background-color: white; padding-bottom: 5px;">
                                     <div class="form-row">
                                         <input ng-model="CarroId" hidden />
                                         <div class="form-group col-sm-3">
@@ -27,9 +26,13 @@
                                         <div class="form-group col-sm-3">
                                             <strong>KM: </strong>{{exKM}}
                                         </div>
+                                        <div class="form-group col-sm-12" style="color:green;">
+                                            <strong>Valor Fipe: </strong>{{valorFipe}}
+                                        </div>
                                         <div class="form-group col-sm-12">
                                             <strong>Descrição: </strong>{{exDescricao}}
                                         </div>
+                                        
                                         <div class="form-group col-sm-12">
                                             <table class="table table-bordered" style="text-align: center;">
                                                 <thead>
@@ -79,10 +82,9 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                        </div>
+                                    </div>
                                     </div>
 
-                                    <hr />
                                     <div class="form-row">
                                         <div class="form-group col-sm-12">
                                             <h4>Informações de venda</h4>
@@ -100,21 +102,22 @@
                                     </div>
                                 </div>
                                 <hr />
-</form>
+                        </form>
                     
-                    <div class="text-sm-right">
-                        <div class="col-sm-6 align-baseline" style="text-align:left; font-size:15px;">
-                            <label id="status" class="badge badge-success rounded-pill d-inline" ng-if="exStatus == 1">
-                                Disponivel
-                            </label>
-                            <label id="status" class="badge badge-primary rounded-pill d-inline" ng-if="exStatus == 2">
-                                Vendido
-                            </label>
-                            <label id="status" class="badge badge-warning rounded-pill d-inline" ng-if="exStatus == 3">
-                                Negociação
-                            </label>
+                        <div class="text-sm-right">
+                            <div class="col-sm-6 align-baseline" style="text-align:left; font-size:15px;">
+                                <label id="status" class="badge badge-success rounded-pill d-inline" ng-if="exStatus == 1">
+                                    Disponivel
+                                </label>
+                                <label id="status" class="badge badge-primary rounded-pill d-inline" ng-if="exStatus == 2">
+                                    Vendido
+                                </label>
+                                <label id="status" class="badge badge-warning rounded-pill d-inline" ng-if="exStatus == 3">
+                                    Negociação
+                                </label>
+                            </div>
+
                         </div>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" id="botaoSalvar" class="btn btn-success" ng-disabled="error || incomplete" ng-click="EditarCarro()" style="display:block">Editar</button>
@@ -123,7 +126,7 @@
                 </div>
 
                 <hr />
-                
+
             </div>
         </div>
     </div>
@@ -135,11 +138,11 @@
             let btn = document.getElementById('gerarPDF');
 
             let conteudo = document.getElementById('conteudo');
-            
+
 
             btn.addEventListener('click', function() {
 
-            doc.addHTML(conteudo, 0, 10, function() {
+            doc.addHTML(conteudo, 5, 5, function() {
 
                 var blob = doc.output("blob");
                 window.open(URL.createObjectURL(blob));
