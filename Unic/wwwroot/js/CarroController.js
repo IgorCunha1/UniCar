@@ -194,7 +194,7 @@ app.controller('CarroController', ['$scope', 'serviceCarro', '$http', function (
         $scope.lucro = 0;
         if (inputVenda.value.replace(/[^a-z0-9]/gi, '') <= 0) {
             $scope.lucro = 0;
-            console.log('Menor ou igual que zero')
+            
         } else {
             $scope.lucro = inputVenda.value.replace(/[^a-z0-9]/gi, '') - $scope.calcCusto;
         }
@@ -203,7 +203,7 @@ app.controller('CarroController', ['$scope', 'serviceCarro', '$http', function (
     var btnAlerta = document.getElementById('alerta');
     $scope.AdicionarCarro = function (){
         $scope.Carro = {};
-        console.log($scope.formAdc)
+        
         if ($scope.formAdc.$valid == false) {
 
             $('#alerta').fadeIn(2000, function () {
