@@ -83,7 +83,6 @@ app.controller('CarroController', ['$scope', 'serviceCarro', '$http', function (
     $scope.CarregarMarcas = function () {
         serviceCarro.CarregarMarcas().then(function(response){
             $scope.marcas = response.data;
-           
         });
     };
 
@@ -201,25 +200,29 @@ app.controller('CarroController', ['$scope', 'serviceCarro', '$http', function (
         }
         
     });
-
+    var btnAlerta = document.getElementById('alerta');
     $scope.AdicionarCarro = function (){
-        
         $scope.Carro = {};
-         //var precoVenda = $scope.PrecoVenda.replace(/[^a-z0-9]/gi, '');
-         var precoCompra = $scope.PrecoCompra.replace(/[^a-z0-9]/gi, '');
-         var placa = $scope.Placa.replace(/[^a-z0-9]/gi, '');
+        console.log($scope.formAdc)
+        if ($scope.formAdc.$valid == false) {
 
+            $('#alerta').fadeIn(2000, function () {
+                setTimeout($('#alerta').fadeOut(2000), 4000);
+            });
+
+        } else {
+         btnAlerta.style.display = 'none';
          $scope.Carro.MarcaId = $scope.Marca;
          $scope.Carro.ModeloId = $scope.Modelo;
          $scope.Carro.AnoModeloId = $scope.AnoModelo;
 
          $scope.Carro.KM = $scope.KM;
          $scope.Carro.Descricao = $scope.Descricao;
-         $scope.Carro.PrecoCompra = precoCompra;
+         $scope.Carro.PrecoCompra = $scope.PrecoCompra.replace(/[^a-z0-9]/gi, '');
          $scope.Carro.PessoaVendedora = $scope.PessoaVendedora;
          $scope.Carro.Status = "1";
-         $scope.Carro.Placa = placa;
-                 
+         $scope.Carro.Placa = $scope.Placa.replace(/[^a-z0-9]/gi, '');
+         console.log($scope.Carro);
         
         serviceCarro.AdicionarCarro($scope.Carro).then(function successCallback(response) {
 
@@ -242,7 +245,8 @@ app.controller('CarroController', ['$scope', 'serviceCarro', '$http', function (
                       })
                      $scope.ListarCarros();
           });
-    }
+       }
+  }
 
     $scope.EditarCarro = function(){
         $scope.Carro = {};
@@ -278,6 +282,7 @@ app.controller('CarroController', ['$scope', 'serviceCarro', '$http', function (
         $scope.PessoaCompradora = '';
         $scope.PessoaVendedora = '';
         $scope.Status = '';
+        $scope.Placa = '';
         
 
     }

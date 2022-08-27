@@ -77,13 +77,16 @@
                     <h4 class="modal-title">Adicionar Carro</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
+                <div class="alert alert-danger" id="alerta" style="display:none;">
+                    Você Precisa Preencher todos os campos <strong>!</strong>
+                </div>                
                 <div class="modal-body">
-                    <form>
+                    <form name="formAdc">
                         <div class="form-row">
                             <input ng-model="CarroId" hidden />
                             <div class="form-group col-sm-6">
                                 <label for="Marca">Marca</label>
-                                <select class="form-select form-control" id="Marca" ng-model="Marca" required="required">
+                                <select class="form-select form-control" id="Marca" ng-model="Marca" required>
                                     <option ng-repeat="marca in marcas" value="{{marca.codigo}}">
                                         {{marca.nome}}
                                     </option>
@@ -91,7 +94,7 @@
                             </div>
                             <div class="form-group col-sm-6">
                                 <label for="Modelo">Modelo</label>
-                                <select class="form-select form-control" id="Modelo" ng-model="Modelo" required="required">
+                                <select class="form-select form-control" id="Modelo" ng-model="Modelo" required>
                                     <option ng-repeat="modelo in modelos" value="{{modelo.codigo}}">
                                         {{modelo.nome}}
                                     </option>
@@ -100,51 +103,75 @@
                         </div>
                         <hr size="50">
                         <div class="form-row">
-                            @*<div class="form-group col-sm-6">
-                                <label for="AnoModelo">Ano Modelo</label>
-                                <input id="AnoModelo" type="number" class="form-control" ng-model="AnoModelo" required="required" />
-                            </div>*@
                             <div class="form-group col-sm-6">
                                 <label for="AnoModelo">Ano</label>
-                                <select class="form-select form-control" id="AnoModelo" ng-model="AnoModelo" required="required">
+                                <select class="form-select form-control" name="AnoModelo" id="AnoModelo" ng-model="AnoModelo" required>
                                     <option ng-repeat="a in AnosModelos" value="{{a.id}}">
                                         {{a.nome}}
                                     </option>
                                 </select>
+                                <span ng-show="formAdc.AnoModelo.$touched && formAdc.AnoModelo.$invalid" style="color:red;">
+                                    Você precisa preencher o Ano.
+                                </span>
                             </div>
 
                             <div class="form-group col-sm-6">
                                 <label for="KM">KM</label>
-                                <input id="KM" type="number" class="form-control" ng-model="KM" required="required" />
+                                <input id="KM" type="number" name="km" class="form-control" ng-model="KM" required />
+                                <div class="small">
+                                    <span ng-show="formAdc.km.$touched && formAdc.km.$invalid" style="color:red;">
+                                        Você precisa preencher o KM.
+                                    </span>
+                                </div>
                             </div>
                             <div class="form-group col-sm-6">
                                 <label for="Descricao">Descricao</label>
-                                <input id="Descricao" type="text" class="form-control" ng-model="Descricao" required="required" />
+                                <input id="Descricao" type="text" class="form-control" name="Descricao" ng-model="Descricao" required />
+                                <div class="small">
+                                    <span ng-show="formAdc.Descricao.$touched && formAdc.Descricao.$invalid" style="color:red;">
+                                        Você precisa preencher a descricao.
+                                    </span>
+                                </div>
                             </div>
                             <div class="form-group col-sm-6">
                                 <label for="PrecoVenda">Preco Compra</label>
-                                <input id="PrecoCompra" type="text" class="form-control money" ng-model="PrecoCompra" required="required" />
+                                <input id="PrecoCompra" type="text" class="form-control money" name="PrecoCompra" ng-model="PrecoCompra" required />
+                                <div class="small">
+                                    <span ng-show="formAdc.PrecoCompra.$touched && formAdc.PrecoCompra.$invalid" style="color:red;">
+                                        Você precisa preencher o PrecoCompra.
+                                    </span>
+                                </div>
                             </div>
                             <div class="form-group col-sm-6">
                                 <label for="PessoaVendedora">Pessoa Vendedora</label>
-                                <input id="PessoaVendedora" type="text" class="form-control" ng-model="PessoaVendedora" required="required" />
+                                <input id="PessoaVendedora" type="text" class="form-control" name="PessoaVendedora" ng-model="PessoaVendedora" required />
+                                <div class="small">
+                                    <span ng-show="formAdc.PessoaVendedora.$touched && formAdc.PessoaVendedora.$invalid" style="color:red;">
+                                        Você precisa preencher informar o vendedor.
+                                    </span>
+                                </div>
                             </div>
                             <div class="form-group col-sm-6">
                                 <label for="Placa">Placa</label>
-                                <input id="Placa" type="text" class="form-control" ng-model="Placa" required="required" />
+                                <input id="Placa" type="text" class="form-control" name="Placa" ng-model="Placa" required />
+                                <div class="small">
+                                    <span ng-show="formAdc.Placa.$touched && formAdc.Placa.$invalid" style="color:red;">
+                                        Você precisa preencher a Placa.
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" id="botaoSalvar" class="btn btn-success" ng-disabled="error || incomplete" ng-click="AdicionarCarro()" style="display:block">Salvar</button>
+                    <button type="submit" id="botaoSalvar" class="btn btn-success" ng-click="AdicionarCarro()" style="display:block">Salvar</button>
                     <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="LimparCampo()">Cancelar</button>
                 </div>
                 <hr />
             </div>
         </div>
     </div>
-@{await Html.RenderPartialAsync("_VenderCarro");}
+    @{await Html.RenderPartialAsync("_VenderCarro");}
 </div>
 
 @section scripts
