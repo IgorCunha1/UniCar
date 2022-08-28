@@ -211,6 +211,8 @@ app.controller('CarroController', ['$scope', 'serviceCarro', '$http', function (
             });
 
         } else {
+            var placa = $scope.Placa.replace(/[^a-z0-9]/gi, '');
+            var precoCompra = $scope.PrecoCompra.replace(/[^a-z0-9]/gi, '');
          btnAlerta.style.display = 'none';
          $scope.Carro.MarcaId = $scope.Marca;
          $scope.Carro.ModeloId = $scope.Modelo;
@@ -218,11 +220,11 @@ app.controller('CarroController', ['$scope', 'serviceCarro', '$http', function (
 
          $scope.Carro.KM = $scope.KM;
          $scope.Carro.Descricao = $scope.Descricao;
-         $scope.Carro.PrecoCompra = $scope.PrecoCompra.replace(/[^a-z0-9]/gi, '');
+            $scope.Carro.PrecoCompra = precoCompra ;
          $scope.Carro.PessoaVendedora = $scope.PessoaVendedora;
          $scope.Carro.Status = "1";
-         $scope.Carro.Placa = $scope.Placa.replace(/[^a-z0-9]/gi, '');
-         console.log($scope.Carro);
+            $scope.Carro.Placa = placa;
+         
         
         serviceCarro.AdicionarCarro($scope.Carro).then(function successCallback(response) {
 
