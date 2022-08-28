@@ -20,6 +20,6 @@ namespace Unic.Models
         public int modeloID { get; set; }
 
         [JsonIgnore]
-        public virtual Carro Carro { get; set; }
+        public virtual List<Carro> Carros { get; set; }
     }
 }

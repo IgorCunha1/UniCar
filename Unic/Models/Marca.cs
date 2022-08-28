@@ -18,7 +18,7 @@ namespace Unic.Models
         public string nome { get; set; }
 
         [JsonIgnore]
-        public virtual Carro Carro { get; set; }
+        public virtual List<Carro> Carros { get; set; }
 
     }
 }

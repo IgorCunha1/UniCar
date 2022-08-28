@@ -27,19 +27,17 @@ namespace Unic.Data
                 .HasForeignKey(Manutencao => Manutencao.CarroId);
 
             builder.Entity<Marca>()
-                .HasOne(Marca => Marca.Carro)
-                .WithOne(Carro => Carro.Marca)
-                .HasForeignKey<Carro>(Carro => Carro.MarcaId);
-
+                .HasMany(Marca => Marca.Carros)
+                .WithOne(Carro => Carro.Marca);
+                
             builder.Entity<Modelo>()
-                .HasOne(Modelo => Modelo.Carro)
-                .WithOne(Carro => Carro.Modelo)
-                .HasForeignKey<Carro>(Carro => Carro.ModeloId);
+                .HasMany(Modelo => Modelo.Carros)
+                .WithOne(Carro => Carro.Modelo);
 
             builder.Entity<Anos>()
-                .HasOne(Anos => Anos.Carro)
-                .WithOne(Carro => Carro.AnoModelo)
-                .HasForeignKey<Carro>(Carro => Carro.AnoModeloId);
+                .HasMany(Anos => Anos.Carros)
+                .WithOne(Carro => Carro.AnoModelo);
+                
 
         }
 

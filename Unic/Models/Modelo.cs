@@ -19,7 +19,7 @@ namespace Unic.Models
         public int MarcaId { get; set; }
 
         [JsonIgnore]
-        public virtual Carro Carro { get; set; }
+        public virtual List<Carro> Carros { get; set; }
 
     }
 }
