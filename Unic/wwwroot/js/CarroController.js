@@ -211,30 +211,31 @@ app.controller('CarroController', ['$scope', 'serviceCarro', '$http', function (
             });
 
         } else {
-            var placa = $scope.Placa.replace(/[^a-z0-9]/gi, '');
-            var precoCompra = $scope.PrecoCompra.replace(/[^a-z0-9]/gi, '');
+
+         var placa = $scope.Placa.replace(/[^a-z0-9]/gi, '');
+         var precoCompra = $scope.PrecoCompra.replace(/[^a-z0-9]/gi, '');
          btnAlerta.style.display = 'none';
+
          $scope.Carro.MarcaId = $scope.Marca;
          $scope.Carro.ModeloId = $scope.Modelo;
          $scope.Carro.AnoModeloId = $scope.AnoModelo;
 
          $scope.Carro.KM = $scope.KM;
          $scope.Carro.Descricao = $scope.Descricao;
-            $scope.Carro.PrecoCompra = precoCompra ;
+         $scope.Carro.PrecoCompra = precoCompra ;
          $scope.Carro.PessoaVendedora = $scope.PessoaVendedora;
          $scope.Carro.Status = "1";
-            $scope.Carro.Placa = placa;
-         
-        
+         $scope.Carro.Placa = placa;
+                
         serviceCarro.AdicionarCarro($scope.Carro).then(function successCallback(response) {
-
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
                         title: 'Carro Salva Com Sucesso',
                         showConfirmButton: false,
                         timer: 15000
-                      })
+                    })
+            $('#adicionarCarro').modal('hide');
                      $scope.ListarCarros();
                      $scope.LimparCampo();
           }, function errorCallback(response) {
